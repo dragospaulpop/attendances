@@ -116,10 +116,17 @@
         if (this.value < 50) return 'orange'
         if (this.value < 75) return 'green'
         return 'blue'
+      },
+      ani () {
+        let ani = []
+        this.events.forEach((event, index) => {
+          let an = event.data.getFullYear()
+          if (!ani.includes(an)) {
+            ani.push(an)
+          }
+        })
+        return ani
       }
-      // ani () {
-      //   years.push(event.data)
-      // }
     },
     filters: {
       longtimeago (date) {
