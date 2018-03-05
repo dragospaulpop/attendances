@@ -45,6 +45,7 @@
       </v-btn>
     </v-toolbar>
     <v-content>
+    
       <router-view/>
     </v-content>
     <v-navigation-drawer
