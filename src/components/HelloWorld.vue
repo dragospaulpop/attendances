@@ -22,7 +22,7 @@
           <v-list>
             <v-list-tile :value="ani" v-for="(event,index) in events" :key="index" @click="">
              <v-list-tile-title>
-              {{year}}
+              {{ani}}
              </v-list-tile-title>
             </v-list-tile>
           </v-list>
@@ -94,7 +94,7 @@
             titlu: 'titlu1',
             avatar: 'http://lorempixel.com/100/100/',
             descriere: 'asdhihdckeckj',
-            data: new Date(),
+            data: new Date('2017-04-11T10:20:30Z'),
             prezenta: true
           },
           {
@@ -103,6 +103,20 @@
             descriere: '<b>asdhihdckeckj bsdfjbhsdhfskkkf</b>',
             data: new Date((new Date()).setDate(25)),
             prezenta: false
+          },
+          {
+            titlu: 'titlu3',
+            avatar: 'http://lorempixel.com/100/100/',
+            descriere: 'asdhihdckeckj',
+            data: new Date('2017-07-11T10:20:30Z'),
+            prezenta: true
+          },
+          {
+            titlu: 'titlu4',
+            avatar: 'http://lorempixel.com/100/100/',
+            descriere: 'asdhihdckeckj',
+            data: new Date(),
+            prezenta: true
           }
         ]
       }
