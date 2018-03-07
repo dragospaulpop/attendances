@@ -84,7 +84,11 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
+<<<<<<< HEAD
       title: 'v. Madalina'
+=======
+      title: 'v. Narcisa'
+>>>>>>> c3ba0ac3fde1aba3590dac5ad5596b34ccf11368
     }
   },
   name: 'App'
