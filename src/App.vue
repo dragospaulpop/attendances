@@ -84,7 +84,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'v. Narcisa'
+      title: 'MASTER branch'
     }
   },
   name: 'App'
