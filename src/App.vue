@@ -45,6 +45,7 @@
       </v-btn>
     </v-toolbar>
     <v-content>
+    
       <router-view/>
     </v-content>
     <v-navigation-drawer
@@ -83,7 +84,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'v. Madalina'
     }
   },
   name: 'App'
