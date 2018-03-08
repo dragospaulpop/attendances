@@ -18,9 +18,12 @@
               Month
             </v-btn>
               <v-list>
-                <v-list-tile v-for="month in months" :key="month.nume" @click="">
+                <v-list-tile v-for="(month, index) in months" :key="index" @click="filter.luna = index" class="grey--text">
                   <v-list-tile-title> 
-                    {{ month.nume }} 
+                    {{month.nume}} 
+                    <template v-if="index === filter.luna">
+                     &#10004;
+                    </template>
                   </v-list-tile-title>
                 </v-list-tile>
               </v-list>
@@ -30,14 +33,17 @@
               Year
             </v-btn>
               <v-list>
-                <v-list-tile v-for="an in events" :key="an.events" @click="">
+                <v-list-tile v-for="an in ani" :key="an" @click="filter.an = an">
                   <v-list-tile-title> 
-                   {{an.data.getFullYear()}}
+                   {{an}}
+                   <template v-if="an === filter.an">
+                    &#10004;
+                   </template>
                   </v-list-tile-title>
                 </v-list-tile>
               </v-list>
            </v-menu>
-          <v-list-tile v-for="(event, index) in events" :key="index" avatar>
+          <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
             <v-list-tile-avatar>
               <img :src="event.avatar">
             </v-list-tile-avatar>
@@ -82,19 +88,59 @@
         prezente: 11,
         total: 30,
         months: [
-          { nume: 'January' },
-          { nume: 'February' },
-          { nume: 'March' },
-          { nume: 'April' },
-          { nume: 'May' },
-          { nume: 'June' },
-          { nume: 'July' },
-          { nume: 'August' },
-          { nume: 'September' },
-          { nume: 'October' },
-          { nume: 'November' },
-          { nume: 'December' }
+          {
+            nume: 'January',
+            clickable: false
+          },
+          {
+            nume: 'February',
+            clickable: false
+          },
+          {
+            nume: 'March',
+            clickable: false
+          },
+          {
+            nume: 'April',
+            clickable: false
+          },
+          {
+            nume: 'May',
+            clickable: false
+          },
+          {
+            nume: 'June',
+            clickable: false
+          },
+          {
+            nume: 'July',
+            clickable: false
+          },
+          {
+            nume: 'August',
+            clickable: false
+          },
+          {
+            nume: 'September',
+            clickable: false
+          },
+          {
+            nume: 'October',
+            clickable: false
+          },
+          {
+            nume: 'November',
+            clickable: false
+          },
+          {
+            nume: 'December',
+            clickable: false
+          }
         ],
+        filter: {
+          an: null,
+          luna: null
+        },
         events: [
           {
             titlu: 'Meeting1',
@@ -143,6 +189,25 @@
         if (this.value < 50) return 'green'
         if (this.value < 80) return 'blue'
         return 'yellow'
+      },
+      ani () {
+        let ani = []
+        this.events.forEach((event, index) => {
+          let an = event.data.getFullYear()
+          if (!ani.includes(an)) {
+            ani.push(an)
+          }
+        })
+        return ani
+      },
+      filterEvents () {
+        return this.events.filter(event => {
+          const an = event.data.getFullYear()
+          const month = event.data.getMonth()
+          const matchingYears = this.filter.an ? this.filter.an === an : true
+          const matchingMonths = this.filter.luna ? this.filter.luna === month : true
+          return matchingYears && matchingMonths
+        })
       }
     },
     filters: {
