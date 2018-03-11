@@ -17,31 +17,45 @@
             <v-btn color="primary" dark slot="activator">
               Month
             </v-btn>
-              <v-list>
-                <v-list-tile v-for="(month, index) in months" :key="index" @click="filter.luna = index" class="grey--text">
-                  <v-list-tile-title> 
-                    {{month.nume}} 
-                    <template v-if="index === filter.luna">
-                     &#10004;
-                    </template>
-                  </v-list-tile-title>
-                </v-list-tile>
-              </v-list>
+            <v-list>
+              <v-list-tile @click="filter.luna = null">  
+                <v-list-tile-title>
+                 All months
+                </v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+            <v-list>
+              <v-list-tile v-for="(month, index) in months" :key="index" @click="filter.luna = index" class="grey--text">
+                <v-list-tile-title> 
+                  {{month.nume}} 
+                  <template v-if="index === filter.luna">
+                   &#10004;
+                  </template>
+                </v-list-tile-title>
+              </v-list-tile>
+            </v-list>
           </v-menu>
           <v-menu offset-y>
             <v-btn color="primary" dark slot="activator">
               Year
             </v-btn>
-              <v-list>
-                <v-list-tile v-for="an in ani" :key="an" @click="filter.an = an">
-                  <v-list-tile-title> 
-                   {{an}}
-                   <template v-if="an === filter.an">
+            <v-list>
+              <v-list-tile @click="filter.an = null">  
+                <v-list-tile-title>
+                 All years
+                </v-list-tile-title>
+               </v-list-tile>
+            </v-list>
+            <v-list>
+              <v-list-tile v-for="an in ani" :key="an" @click="filter.an = an">
+                <v-list-tile-title> 
+                  {{an}}
+                  <template v-if="an === filter.an">
                     &#10004;
-                   </template>
-                  </v-list-tile-title>
-                </v-list-tile>
-              </v-list>
+                  </template>
+                </v-list-tile-title>
+              </v-list-tile>
+            </v-list>
            </v-menu>
           <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
             <v-list-tile-avatar>
