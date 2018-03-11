@@ -214,6 +214,13 @@
         })
         return ani
       },
+      clickableMonths () {
+        this.months.forEach(month => {
+          if (this.months === this.events.data) {
+            return this.months.clickable === true
+          }
+        })
+      },
       filterEvents () {
         return this.events.filter(event => {
           const an = event.data.getFullYear()
