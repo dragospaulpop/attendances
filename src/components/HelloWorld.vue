@@ -286,9 +286,9 @@
       },
       dateFilter () {
         return this.events.filter(event => {
-          const dataSelectata1 = this.$refs.menu.save.data()
-          const dataSelectata2 = this.$refs.menu1.save.data1()
-          if (this.event > dataSelectata1 && this.event < dataSelectata2) {
+          const dataSelectata1 = this.$refs.menu.save.date()
+          const dataSelectata2 = this.$refs.menu1.save.date1()
+          if (this.event.data > dataSelectata1 && this.event.data < dataSelectata2) {
             return this.event
           }
         })
