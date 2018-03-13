@@ -56,7 +56,73 @@
                 </v-list-tile-title>
               </v-list-tile>
             </v-list>
-           </v-menu>
+          </v-menu>
+          <v-flex xs11 sm5> 
+            <v-menu
+              ref="menu"
+              lazy
+              :close-on-content-click="false"
+              v-model="menu"
+              transition="scale-transition"
+              offset-y
+              full-width
+              :nudge-right="40"
+              min-width="290px"
+              :return-value.sync="date"
+            >
+              <v-text-field
+                slot="activator"
+                label="Data de start"
+                v-model="date"
+                prepend-icon="event"
+                readonly
+              >
+              </v-text-field>
+              <v-date-picker v-model="date" no-title scrollable>
+                <v-spacer>
+                </v-spacer>
+                <v-btn flat color="primary" @click="menu = false">
+                  Cancel
+                </v-btn>
+                <v-btn flat color="primary" @click="$refs.menu.save(date)">
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs11 sm5>
+            <v-menu
+              ref="menu1"
+              lazy
+              :close-on-content-click="false"
+              v-model="menu1"
+              transition="scale-transition"
+              offset-y
+              full-width
+              :nudge-right="40"
+              min-width="290px"
+              :return-value.sync="date1"
+            >
+              <v-text-field
+                slot="activator"
+                label="Data de final"
+                v-model="date1"
+                prepend-icon="event"
+                readonly
+              >
+              </v-text-field>
+              <v-date-picker v-model="date1" no-title scrollable>
+                <v-spacer>
+                </v-spacer>
+                <v-btn flat color="primary" @click="menu1 = false">
+                  Cancel
+                </v-btn>
+                <v-btn flat color="primary" @click="$refs.menu1.save(date1)">
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </v-flex>
           <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
             <v-list-tile-avatar>
               <img :src="event.avatar">
@@ -99,6 +165,10 @@
     name: 'profil',
     data () {
       return {
+        date: null,
+        menu: false,
+        date1: null,
+        menu1: false,
         prezente: 11,
         total: 30,
         months: [
@@ -213,6 +283,15 @@
           }
         })
         return ani
+      },
+      dateFilter () {
+        return this.events.filter(event => {
+          const dataSelectata1 = this.$refs.menu.save.data()
+          const dataSelectata2 = this.$refs.menu1.save.data1()
+          if (this.event > dataSelectata1 && this.event < dataSelectata2) {
+            return this.event
+          }
+        })
       },
       clickableMonths () {
         this.months.forEach(month => {
