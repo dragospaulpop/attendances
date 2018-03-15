@@ -84,7 +84,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'MASTER branch'
+      title: 'Madalina Dicu branch'
     }
   },
   name: 'App'
