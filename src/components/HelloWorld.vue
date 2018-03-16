@@ -84,15 +84,9 @@
                 readonly
               >
               </v-text-field>
-              <v-date-picker v-model="date" no-title scrollable>
+              <v-date-picker v-model="date" no-title scrollable @change="$refs.menu.save(date)">
                 <v-spacer>
                 </v-spacer>
-                <v-btn flat color="primary" @click="menu = false">
-                  Cancel
-                </v-btn>
-                <v-btn flat color="primary" @click="$refs.menu.save(date)">
-                  OK
-                </v-btn>
               </v-date-picker>
             </v-menu>
           </v-flex>
@@ -117,15 +111,9 @@
                 readonly
               >
               </v-text-field>
-              <v-date-picker v-model="date1" no-title scrollable>
+              <v-date-picker v-model="date1" no-title scrollable @change="$refs.menu1.save(date1)">
                 <v-spacer>
                 </v-spacer>
-                <v-btn flat color="primary" @click="menu1 = false">
-                  Cancel
-                </v-btn>
-                <v-btn flat color="primary" @click="$refs.menu1.save(date1)">
-                  OK
-                </v-btn>
               </v-date-picker>
             </v-menu>
           </v-flex>
@@ -290,15 +278,6 @@
         })
         return ani
       },
-      dateFilter () {
-        return this.events.filter(event => {
-          const dataSelectata1 = this.$refs.menu.save.date()
-          const dataSelectata2 = this.$refs.menu1.save.date1()
-          if (this.event.data > dataSelectata1 && this.event.data < dataSelectata2) {
-            return this.event
-          }
-        })
-      },
       clickableMonths () {
         this.months.forEach(month => {
           if (this.months === this.events.data) {
@@ -310,9 +289,27 @@
         return this.events.filter(event => {
           const an = event.data.getFullYear()
           const month = event.data.getMonth()
-          const matchingYears = this.filter.an ? this.filter.an === an : true
-          const matchingMonths = this.filter.luna ? this.filter.luna === month : true
-          return matchingYears && matchingMonths
+          let matchingYears = true
+          let matchingMonths = true
+          let beforeData = true
+          let afterData = true
+          let betweenData = true
+          if (this.filter.an || this.filter.luna) {
+            matchingYears = this.filter.an ? this.filter.an === an : true
+            matchingMonths = this.filter.luna ? this.filter.luna === month : true
+          } else if (this.date || this.date1) {
+            const data = moment(event.data)
+            const after = moment(this.date)
+            const before = moment(this.date1)
+            if (after === null && before) {
+              beforeData = before ? data.isSameOrBefore(before) : true
+            } else if (after && before === null) {
+              afterData = after ? data.isSameOrAfter(after) : true
+            } else if (after && before) {
+              betweenData = (before && after) ? data.isBetween(after, before, null, '[]') : true
+            }
+          }
+          return matchingYears && matchingMonths && beforeData && afterData && betweenData
         })
       }
     },
