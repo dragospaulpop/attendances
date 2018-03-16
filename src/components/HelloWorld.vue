@@ -21,6 +21,9 @@
               <v-list-tile @click="filter.luna = null">  
                 <v-list-tile-title>
                  All months
+                 <template v-if="filter.luna === null">
+                  &#10004;
+                 </template>
                 </v-list-tile-title>
               </v-list-tile>
             </v-list>
@@ -43,6 +46,9 @@
               <v-list-tile @click="filter.an = null">  
                 <v-list-tile-title>
                  All years
+                 <template v-if="filter.an === null">
+                  &#10004;
+                 </template>
                 </v-list-tile-title>
                </v-list-tile>
             </v-list>
