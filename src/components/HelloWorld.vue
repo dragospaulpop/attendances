@@ -62,7 +62,10 @@
                 </v-list-tile-title>
               </v-list-tile>
             </v-list>
-          </v-menu>
+          </v-menu> 
+          <v-btn color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
+              Reset
+          </v-btn>
           <v-flex xs11 sm5> 
             <v-menu
               ref="menu"
