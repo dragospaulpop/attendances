@@ -28,13 +28,16 @@
               </v-list-tile>
             </v-list>
             <v-list>
-              <v-list-tile v-for="(month, index) in months" :key="index" @click="filter.luna = index" class="grey--text">
+              <v-list-tile v-for="(month, index) in months" :key="index" @click="filter.luna = index" 
+               :class="{'black--text':month.clickable, 'grey--text':!month.clickable}">
+               {{clickableMonths}}
                 <v-list-tile-title> 
                   {{month.nume}} 
                   <template v-if="index === filter.luna">
                    &#10004;
                   </template>
                 </v-list-tile-title>
+
               </v-list-tile>
             </v-list>
           </v-menu>
@@ -282,11 +285,14 @@
         return ani
       },
       clickableMonths () {
-        this.months.forEach(month => {
-          if (this.months === this.events.data) {
-            return this.months.clickable === true
+        let months = []
+        this.events.forEach((event, index) => {
+          let month = event.data.getMonth()
+          if (!months.includes(month)) {
+            months.push(month)
           }
         })
+        return months
       },
       filterEvents () {
         return this.events.filter(event => {
