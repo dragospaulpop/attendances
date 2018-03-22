@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import firebase from '@/firebase'
 
 Vue.use(Vuex)
 
@@ -45,9 +46,19 @@ export default new Vuex.Store({
         data: new Date('March 2, 2018'),
         prezenta: false
       }
-    ]
+    ],
+    firebase: {
+      db: firebase.database()
+    }
   },
   mutations: {
+  },
+  actions: {
+    getData () {
+      return this.firebase.db.ref('events/').on('value', snap => {
+        console.log(this.firebase.db)
+      })
+    }
   },
   getters: {
     events (state) {
