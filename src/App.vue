@@ -86,7 +86,6 @@ export default {
       title: 'v. Narcisa'
     }
   },
-  name: 'App',
-  firebase: 'firebase'
+  name: 'App'
 }
 </script>

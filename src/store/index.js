@@ -56,7 +56,7 @@ export default new Vuex.Store({
   actions: {
     getData () {
       return this.firebase.db.ref('events/').on('value', snap => {
-        console.log(this.firebase.db)
+        console.log(firebase.database())
       })
     }
   },
