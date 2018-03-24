@@ -21,5 +21,12 @@
 
 
 <script>
-
+  export default {
+    name: 'events',
+    data () {
+      return {
+        id: this.$route.params.id
+      }
+    }
+  }
 </script>
