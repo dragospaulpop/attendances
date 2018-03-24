@@ -1,12 +1,27 @@
 <template>
   <v-layout>
-    <v-flex xs1 offset-sm3>
-      <div>
-        <h1>Sign in</h1>
-        <input type="text" placeholder="Email">
-        <input type="password" placeholder="Password">  
+        <v-flex xs12 sm6 offset-sm3>
+          <h1>Sign in</h1>
+          <v-text-field
+            label="Enter your E-mail"
+            v-model="email"
+            :rules="[rules.required, rules.email]"
+          >
+          </v-text-field>
+          <v-text-field
+            name="input-10-1"
+            label="Enter your password"
+            hint="At least 8 characters"
+            v-model="password"
+            min="8"
+            :append-icon="e1 ? 'visibility' : 'visibility_off'"
+            :append-icon-cb="() => (e1 = !e1)"
+            :type="e1 ? 'password' : 'text'"
+            :rules="[rules.required]"
+            counter
+          >
+          </v-text-field>
         <v-btn color="primary" router to = "/">Login</v-btn>  
-      </div>
     </v-flex>
   </v-layout>
 </template>
@@ -18,6 +33,20 @@
 
 <script>
   export default {
-    name: 'login'
+    name: 'login',
+    data () {
+      return {
+        e1: false,
+        password: '',
+        email: '',
+        rules: {
+          required: (value) => !!value || 'Required.',
+          email: (value) => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Invalid e-mail.'
+          }
+        }
+      }
+    }
   }
 </script>
