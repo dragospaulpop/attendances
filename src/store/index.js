@@ -43,15 +43,17 @@ export default new Vuex.Store({
         id: 4,
         titlu: 'Meeting5',
         avatar: 'http://lorempixel.com/100/100/',
+        descriere: 'Intalnire nr 5',
         data: new Date('March 2, 2018'),
         prezenta: false
       }
     ],
-    firebase: {
-      db: firebase.database()
-    }
+    user: null
   },
   mutations: {
+    setUser (state, payload) {
+      state.user = payload
+    }
   },
   actions: {
     getData () {
@@ -63,6 +65,9 @@ export default new Vuex.Store({
   getters: {
     events (state) {
       return state.events
+    },
+    user (state) {
+      return state.user
     }
   }
 })

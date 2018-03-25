@@ -36,7 +36,7 @@
     name: 'login',
     data () {
       return {
-        e1: false,
+        e1: true,
         password: '',
         email: '',
         rules: {
