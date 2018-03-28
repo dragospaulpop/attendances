@@ -60,14 +60,27 @@ export default new Vuex.Store({
       return this.firebase.db.ref('events/').on('value', snap => {
         console.log(firebase.database())
       })
+    },
+    signIn ({commit}, payload) {
+      firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+        .then(
+          user => {
+            const newUser = {
+              id: user.uid
+            }
+            commit('setUser', newUser)
+          }
+        )
+        .catch(
+          error => {
+            console.log(error)
+          }
+        )
     }
   },
   getters: {
     events (state) {
       return state.events
-    },
-    user (state) {
-      return state.user
     }
   }
 })

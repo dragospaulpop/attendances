@@ -38,7 +38,7 @@
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>remove</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-chip close v-model="chip1">Sign out</v-chip>
       <v-spacer></v-spacer>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>menu</v-icon>
@@ -73,6 +73,7 @@
 export default {
   data () {
     return {
+      chip1: true,
       clipped: false,
       drawer: false,
       fixed: false,
