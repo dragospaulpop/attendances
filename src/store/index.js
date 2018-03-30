@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from '@/firebase'
+import router from '@/router'
 
 Vue.use(Vuex)
 
@@ -48,6 +49,9 @@ export default new Vuex.Store({
         prezenta: false
       }
     ],
+    firebase: {
+      db: firebase.database()
+    },
     user: null
   },
   mutations: {
@@ -56,7 +60,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getData () {
+    readEvents () {
       return this.firebase.db.ref('events/').on('value', snap => {
         console.log(firebase.database())
       })
@@ -69,6 +73,7 @@ export default new Vuex.Store({
               id: user.uid
             }
             commit('setUser', newUser)
+            router.push({path: '/'})
           }
         )
         .catch(
