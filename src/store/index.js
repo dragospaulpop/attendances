@@ -99,9 +99,9 @@ export default new Vuex.Store({
           }
         )
     },
-    signOut () {
+    signOut ({commit}) {
       firebase.auth().signOut().then(function () {
-        // Sign-out successful.
+        commit('setUser', null)
       }).catch(
         error => {
           console.log(error)

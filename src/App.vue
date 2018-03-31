@@ -38,7 +38,7 @@
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>remove</v-icon>
       </v-btn>
-      <v-chip close v-model="chip1">Sign out</v-chip>
+      <v-chip close v-model="chip1" @click="onSignOut">Sign out</v-chip>
       <v-spacer></v-spacer>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>menu</v-icon>
@@ -87,6 +87,11 @@ export default {
       title: 'v. Narcisa'
     }
   },
-  name: 'App'
+  name: 'App',
+  methods: {
+    onSignOut () {
+      this.$store.dispatch('signOut')
+    }
+  }
 }
 </script>
