@@ -67,8 +67,11 @@
           <v-btn color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
               Reset
           </v-btn>
+          <v-btn color="primary" to="/signup">
+              SignUp
+          </v-btn>
           <v-btn color="primary" to="/login">
-              Login
+            Login
           </v-btn>
           <v-flex xs11 sm5> 
             <v-menu

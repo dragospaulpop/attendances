@@ -65,6 +65,23 @@ export default new Vuex.Store({
         console.log(firebase.database())
       })
     },
+    signUp ({commit}, payload) {
+      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+        .then(
+          user => {
+            const newUser = {
+              id: user.uid
+            }
+            commit('setUser', newUser)
+            router.push({path: '/'})
+          }
+        )
+        .catch(
+          error => {
+            console.log(error)
+          }
+        )
+    },
     signIn ({commit}, payload) {
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
@@ -81,6 +98,14 @@ export default new Vuex.Store({
             console.log(error)
           }
         )
+    },
+    signOut () {
+      firebase.auth().signOut().then(function () {
+        // Sign-out successful.
+      }).catch(
+        error => {
+          console.log(error)
+        })
     }
   },
   getters: {
