@@ -7,49 +7,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    events: [
-      {
-        id: 0,
-        titlu: 'Meeting1',
-        avatar: 'http://lorempixel.com/100/100/',
-        descriere: '<p style="color:red">Intalnire nr 1</p>',
-        data: new Date('March 2, 2017'),
-        prezenta: true
-      },
-      {
-        id: 1,
-        titlu: 'Meeting2',
-        avatar: 'http://lorempixel.com/100/100/',
-        descriere: 'Intalnire nr 2',
-        data: new Date('June 2, 2017'),
-        prezenta: true
-      },
-      {
-        id: 2,
-        titlu: 'Meeting3',
-        avatar: 'http://lorempixel.com/100/100/',
-        descriere: 'Intalnire nr 3',
-        data: new Date('December 2, 2017'),
-        prezenta: false
-      },
-      {
-        id: 3,
-        titlu: 'Meeting4',
-        avatar: 'http://lorempixel.com/100/100/',
-        descriere: 'Intalnire nr 4',
-        data: new Date('January 2, 2018'),
-        prezenta: true
-      },
-      {
-        id: 4,
-        titlu: 'Meeting5',
-        avatar: 'http://lorempixel.com/100/100/',
-        descriere: 'Intalnire nr 5',
-        data: new Date('March 2, 2018'),
-        prezenta: false
-      }
-    ],
-    firebase: {
+    events: [],
+    location: {
+      lat: null,
+      lng: null,
+      accu: null
+    },
+    fb: {
       db: firebase.database()
     },
     user: null
@@ -57,13 +21,33 @@ export default new Vuex.Store({
   mutations: {
     setUser (state, payload) {
       state.user = payload
+    },
+    getEvents: (state, payload) => {
+      state.events.push(payload)
+    },
+    getLocation: (state, payload) => {
+      state.location = payload
     }
   },
   actions: {
-    readEvents () {
-      return this.firebase.db.ref('events/').on('value', snap => {
-        console.log(firebase.database())
-      })
+    readEvents ({commit}, payload) {
+      return firebase.database().ref('events')
+        .on('value', snap => {
+          const myObj = snap.val()
+          const keys = Object.keys(snap.val())
+          keys.forEach(key => {
+            var eventdetails = {}
+            eventdetails.avatar = myObj[key].avatar
+            eventdetails.descriere = myObj[key].descriere
+            eventdetails.id = myObj[key].id
+            eventdetails.prezenta = myObj[key].prezenta
+            eventdetails.titlu = myObj[key].titlu
+            eventdetails.data = new Date(myObj[key].data)
+            commit('getEvents', eventdetails)
+          })
+        }, function (error) {
+          console.log('Error: ' + error.message)
+        })
     },
     signUp ({commit}, payload) {
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
@@ -106,11 +90,24 @@ export default new Vuex.Store({
         error => {
           console.log(error)
         })
+    },
+    getLocation ({commit}, payload) {
+      return navigator.geolocation.getCurrentPosition(pos => {
+        commit('getLocation', {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          acc: pos.coords.accuracy
+        })
+      },
+      error => {
+        window.alert(error.message)
+      }, { enableHighAccuracy: true,
+        maximumAge: 0 })
     }
   },
   getters: {
-    events (state) {
-      return state.events
-    }
+    events: state => state.events,
+    user: state => state.user,
+    coords: state => state.location
   }
 })

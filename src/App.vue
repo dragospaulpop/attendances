@@ -88,6 +88,14 @@ export default {
     }
   },
   name: 'App',
+  created: function () {
+    this.$store.dispatch('readEvents')
+  },
+  computed: {
+    events () {
+      return this.$store.getters.events
+    }
+  },
   methods: {
     onSignOut () {
       this.$store.dispatch('signOut')

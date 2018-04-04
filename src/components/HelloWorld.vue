@@ -125,6 +125,7 @@
                 <v-spacer>
                 </v-spacer>
               </v-date-picker>
+               <v-switch :label="'Switch 1: ${switch1.toString()}'" v-model="switch1"></v-switch>
             </v-menu>
           </v-flex>
           <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
@@ -153,6 +154,9 @@
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
+        <v-btn @click="getLocation"> Locatie
+        </v-btn>
+         <div id="map"></div>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -171,6 +175,7 @@
     name: 'profil',
     data () {
       return {
+        switch1: true,
         date: null,
         menu: false,
         date1: null,
@@ -237,6 +242,9 @@
       events () {
         return this.$store.getters.events
       },
+      coordonate () {
+        return this.$store.state.location
+      },
       value () {
         return Math.floor(this.prezente * 100 / this.total)
       },
@@ -298,6 +306,30 @@
       filtru (date) {
         return moment(date).fromNow()
       }
+    },
+    methods: {
+      getLocation () {
+        this.$store.dispatch('getLocation')
+      }
+    },
+    mounted: function () {
+      console.log('map: ', window.google.maps)
+      const map = new window.google.maps.Map(document.getElementById('map'), {
+        center: {lat: 44.411877499999996, lng: 26.1400713},
+        zoom: 16
+      })
+      var marker = new window.google.maps.Marker({
+        position: {lat: 44.411877499999996, lng: 26.1400713},
+        map: map
+      })
     }
   }
 </script>
+
+<style>
+ #map {
+   width: 100%;
+   height: 400px;
+   background-color: grey;
+ }
+</style>
