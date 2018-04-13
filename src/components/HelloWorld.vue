@@ -67,12 +67,6 @@
           <v-btn color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
               Reset
           </v-btn>
-          <v-btn color="primary" to="/signup">
-              SignUp
-          </v-btn>
-          <v-btn color="primary" to="/login">
-            Login
-          </v-btn>
           <v-flex xs11 sm5> 
             <v-menu
               ref="menu"
@@ -125,15 +119,16 @@
                 <v-spacer>
                 </v-spacer>
               </v-date-picker>
-               <v-switch :label="'Switch 1: ${switch1.toString()}'" v-model="switch1"></v-switch>
             </v-menu>
           </v-flex>
           <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
+            <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
             <v-list-tile-avatar>
               <img :src="event.avatar">
             </v-list-tile-avatar>
+            </router-link>
             <v-list-tile-content>
-              <router-link to="/events/:id" tag="li" style="cursor:pointer">
+              <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
               <v-list-tile-title>
                 {{event.titlu}}
               </v-list-tile-title>

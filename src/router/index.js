@@ -4,16 +4,12 @@ import HelloWorld from '@/components/HelloWorld'
 import Events from '@/components/Events'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
+import AuthGuard from './authGuard'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
     {
       path: '/login',
       name: 'Login',
@@ -27,7 +23,14 @@ export default new Router({
     {
       path: '/events/:id',
       name: 'Events',
-      component: Events
+      component: Events,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld,
+      beforeEnter: AuthGuard
     }
   ]
 })

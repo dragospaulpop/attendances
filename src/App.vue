@@ -14,6 +14,7 @@
           value="true"
           v-for="(item, i) in items"
           :key="i"
+          v-if="onLoad"
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
@@ -94,6 +95,16 @@ export default {
   computed: {
     events () {
       return this.$store.getters.events
+    },
+    onLoad () {
+      if (this.userIsAuthenticated) {
+        this.$router.push('/')
+      } else {
+        this.$router.push('/login')
+      }
+    },
+    userIsAuthenticated () {
+      return this.$store.getters.user !== null && this.$store.getters.user !== undefined
     }
   },
   methods: {

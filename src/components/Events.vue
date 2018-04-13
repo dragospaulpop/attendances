@@ -5,7 +5,8 @@
         <v-card-media src="https://picsum.photos/200/250/?random" height="200px">
         </v-card-media>
         <v-card-title primary-title>
-          Events
+          <h3 > {{ this.events[id].titlu }} </h3>
+          <div> {{ this.events[id].descriere }} </div>
         </v-card-title>
         <v-card-actions>
           <v-btn flat color="orange" router to = "/">Back</v-btn>
@@ -26,6 +27,11 @@
     data () {
       return {
         id: this.$route.params.id
+      }
+    },
+    computed: {
+      events () {
+        return this.$store.getters.events
       }
     }
   }

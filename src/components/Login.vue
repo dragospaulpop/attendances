@@ -23,6 +23,7 @@
         >
         </v-text-field>
         <v-btn color="primary" type="submit" @click="userSignin">Login</v-btn>  
+        <v-btn color="primary" type="submit" to="/signup">Sign Up</v-btn>  
       </v-flex>
     </v-layout>
   </v-container>
@@ -48,6 +49,11 @@
             return pattern.test(value) || 'Invalid e-mail.'
           }
         }
+      }
+    },
+    computed: {
+      user () {
+        return this.$store.getters.user
       }
     },
     methods: {

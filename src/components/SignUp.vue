@@ -32,6 +32,7 @@
         >
         </v-text-field>
         <v-btn color="primary" type="submit" @click="userSignUp">Sign Up</v-btn>  
+        <v-btn color="primary" type="submit" to="/login">Back</v-btn>  
       </v-flex>
     </v-layout>
   </v-container>
