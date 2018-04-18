@@ -10,7 +10,7 @@ export default new Vuex.Store({
     events: [],
     location: {
       lat: null,
-      lng: null,
+      long: null,
       accu: null
     },
     fb: {
@@ -90,6 +90,15 @@ export default new Vuex.Store({
           }
         )
     },
+    AuthChange ({commit}) {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          commit('setUser', user)
+        } else {
+          commit('setUser', null)
+        }
+      })
+    },
     signOut ({commit}) {
       firebase.auth().signOut().then(function () {
         commit('setUser', null)
@@ -98,14 +107,11 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
-    autoSignIn ({commit}, payload) {
-      commit('setUser', {id: payload.uid})
-    },
     getLocation ({commit}, payload) {
       return navigator.geolocation.getCurrentPosition(pos => {
         commit('getLocation', {
           lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
+          long: pos.coords.longitude,
           acc: pos.coords.accuracy
         })
       },
@@ -118,6 +124,6 @@ export default new Vuex.Store({
   getters: {
     events: state => state.events,
     user: state => state.user,
-    coords: state => state.location
+    location: state => state.location
   }
 })

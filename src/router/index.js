@@ -4,6 +4,8 @@ import HelloWorld from '@/components/HelloWorld'
 import Events from '@/components/Events'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
+import Admin from '@/components/Admin'
+import createMeetup from '@/components/createMeetup'
 import AuthGuard from './authGuard'
 
 Vue.use(Router)
@@ -25,6 +27,16 @@ export default new Router({
       name: 'Events',
       component: Events,
       beforeEnter: AuthGuard
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
+    },
+    {
+      path: '/createmeetup',
+      name: 'createmeetup',
+      component: createMeetup
     },
     {
       path: '/',

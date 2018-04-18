@@ -67,6 +67,9 @@
           <v-btn color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
               Reset
           </v-btn>
+          <v-btn color="primary" to="/createMeetup">
+            Add meeting
+          </v-btn>
           <v-flex xs11 sm5> 
             <v-menu
               ref="menu"
@@ -115,7 +118,6 @@
                 readonly
               >
               </v-text-field>
-              <v-date-picker v-model="date1" no-title scrollable @change="$refs.menu1.save(date1)">
                 <v-spacer>
                 </v-spacer>
               </v-date-picker>
@@ -140,16 +142,9 @@
               <v-list-tile-action-text>
                 {{event.data | filtru}}
               </v-list-tile-action-text>
-              <v-icon :class="{
-                'green--text':event.prezenta,
-                'red--text':!event.prezenta
-              }" @click="event.prezenta=!event.prezenta">
-                {{event.prezenta ? "star" : "star_border"}}
-              </v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
-         <div id="map"></div>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -168,6 +163,7 @@
     name: 'profil',
     data () {
       return {
+        switch1: true,
         date: null,
         menu: false,
         date1: null,
@@ -234,9 +230,6 @@
       events () {
         return this.$store.getters.events
       },
-      coords () {
-        return this.$store.getters.location
-      },
       value () {
         return Math.floor(this.prezente * 100 / this.total)
       },
@@ -255,16 +248,6 @@
           }
         })
         return ani
-      },
-      clickableMonths () {
-        let months = []
-        this.events.forEach((event, index) => {
-          let month = event.data.getMonth()
-          if (!months.includes(month)) {
-            months.push(month)
-          }
-        })
-        return months
       },
       filterEvents () {
         return this.events.filter(event => {
@@ -298,30 +281,6 @@
       filtru (date) {
         return moment(date).fromNow()
       }
-    },
-    methods: {
-      getLocation () {
-        this.$store.dispatch('getLocation')
-      }
-    },
-    mounted: function () {
-      console.log('map: ', window.google.maps)
-      const map = new window.google.maps.Map(document.getElementById('map'), {
-        center: {lat: +this.coords.lat, lng: +this.coords.long},
-        zoom: 16
-      })
-      var marker = new window.google.maps.Marker({
-        position: {lat: +this.coords.lat, lng: +this.coords.long},
-        map: map
-      })
     }
   }
 </script>
-
-<style>
- #map {
-   width: 100%;
-   height: 400px;
-   background-color: grey;
- }
-</style>
