@@ -16,7 +16,8 @@ export default new Vuex.Store({
     fb: {
       db: firebase.database()
     },
-    user: null
+    user: null,
+    keysEvents: []
   },
   mutations: {
     setUser (state, payload) {
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     },
     getEvents: (state, payload) => {
       state.events.push(payload)
+    },
+    getKeys: (state, payload) => {
+      state.keysEvents = payload
     },
     getLocation: (state, payload) => {
       state.location = payload
@@ -52,6 +56,7 @@ export default new Vuex.Store({
             eventdetails.data = new Date(myObj[key].data)
             commit('getEvents', eventdetails)
           })
+          commit('getKeys', keys)
         }, function (error) {
           console.log('Error: ' + error.message)
         })

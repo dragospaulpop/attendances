@@ -10,3 +10,13 @@ const config = {
 }
 
 export default firebase.initializeApp(config)
+
+// firebase.database().ref('/events/MYUID')
+//   .set({
+//     id: 1,
+//     titlu: 'Meeting2',
+//     avatar: 'http://lorempixel.com/100/100/',
+//     descriere: 'Intalnire nr 2',
+//     data: new Date('June 2, 2017'),
+//     prezenta: true
+//   })

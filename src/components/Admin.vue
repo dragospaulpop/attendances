@@ -120,7 +120,6 @@
               </v-text-field>
                 <v-spacer>
                 </v-spacer>
-              </v-date-picker>
             </v-menu>
           </v-flex>
           <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
@@ -142,6 +141,9 @@
               <v-list-tile-action-text>
                 {{event.data | filtru}}
               </v-list-tile-action-text>
+            <v-icon @click="nrEvent = index" style="cursor:pointer">
+              delete
+            </v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
@@ -158,11 +160,13 @@
 
 <script>
   /* eslint-disable no-unused-vars */
+  import firebase from '@/firebase'
   import moment from 'moment'
   export default {
     name: 'profil',
     data () {
       return {
+        nrEvent: null,
         switch1: true,
         date: null,
         menu: false,
@@ -275,6 +279,11 @@
           }
           return matchingYears && matchingMonths && beforeData && afterData && betweenData
         })
+      }
+    },
+    methods: {
+      deleteEvent (index) {
+        return firebase.database().ref().delete()
       }
     },
     filters: {

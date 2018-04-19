@@ -7,7 +7,7 @@
     </v-layout>
     <v-layout row>
       <v-flex xs12>
-        <form @submit.prevent="onCreateMeetup">
+        <form>
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-text-field
@@ -32,9 +32,37 @@
             <v-flex xs12 sm6 offset-sm3>
               <v-btn
                 class="primary"
-                type="submit">Create Meetup</v-btn>
+                type="submit" 
+                @click="createMeetup">Create Meetup</v-btn>
             </v-flex>
           </v-layout>
+        <v-flex xs11 sm5>
+            <v-menu
+              ref="menuevent"
+              lazy
+              :close-on-content-click="false"
+              v-model="menuevent"
+              transition="scale-transition"
+              offset-y
+              full-width
+              :nudge-right="40"
+              min-width="290px"
+              :return-value.sync="dateevent"
+            >
+              <v-text-field
+                slot="activator"
+                label="Meeting date"
+                v-model="dateevent"
+                prepend-icon="event"
+                readonly
+              >
+              </v-text-field>
+              <v-date-picker v-model="dateevent" no-title scrollable @change="$refs.menuevent.save(dateevent)">
+                <v-spacer>
+                </v-spacer>
+              </v-date-picker>
+            </v-menu>
+          </v-flex>
         </form>
       </v-flex>
     </v-layout>
@@ -42,24 +70,26 @@
 </template>
 
 <script>
+  import firebase from '@/firebase'
   export default {
     data () {
       return {
+        dateevent: null,
+        menuevent: false,
         title: '',
-        descriere: '',
-        date: new Date(),
-        time: new Date()
+        descriere: ''
       }
     },
     methods: {
-      onCreateMeetup () {
-        const meetupData = {
-          title: this.title,
-          descriere: this.descriere,
-          date: this.submittableDateTime
-        }
-        this.$store.dispatch('createMeetup', meetupData)
-        this.$router.push('/')
+      createMeetup () {
+        firebase.database().ref('/events/')
+          .push({
+            titlu: this.title,
+            avatar: 'http://lorempixel.com/100/100/',
+            descriere: this.descriere,
+            data: this.dateevent,
+            prezenta: false
+          })
       }
     }
   }
