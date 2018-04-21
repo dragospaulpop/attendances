@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      v-show="userIsAuthenticated" 
       persistent
       :mini-variant="miniVariant"
       :clipped="clipped"
@@ -9,6 +10,18 @@
       fixed
       app
     >
+      <h1>My profile</h1>
+      <v-progress-circular
+        :size="100"
+        :width="15"
+        :rotate="360"
+        :value="value"
+        :color="color"
+        >
+          {{ value }} %
+        </v-progress-circular>
+        {{prezente}} din {{total}}
+      <v-chip close v-model="chip1" @click="onSignOut">Sign out</v-chip>
       <v-list>
         <v-list-tile
           value="true"
@@ -28,25 +41,27 @@
     <v-toolbar
       app
       :clipped-left="clipped"
+      dark color="primary"
     >
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-      </v-btn>
-      <v-chip close v-model="chip1" @click="onSignOut">Sign out</v-chip>
+      <v-toolbar-side-icon v-show="userIsAuthenticated" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title class="white--text">Meeting App</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-content>
       <router-view/>
     </v-content>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; 2017</span>
-    </v-footer>
+    <v-footer height="auto" class="primary">
+    <v-layout row wrap justify-center>
+      <v-btn
+        color="white"
+        flat
+        v-for="link in links"
+        :key="link"
+      >
+        {{ link }}
+      </v-btn>
+    </v-layout>
+  </v-footer>
   </v-app>
 </template>
 
@@ -65,7 +80,10 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'v. Narcisa'
+      title: 'v. Narcisa',
+      prezente: 11,
+      total: 30,
+      links: ['Home', 'About Us', 'Contact Us']
     }
   },
   name: 'App',
@@ -76,6 +94,15 @@ export default {
   computed: {
     events () {
       return this.$store.getters.events
+    },
+    value () {
+      return Math.floor(this.prezente * 100 / this.total)
+    },
+    color () {
+      if (this.value < 25) return 'red'
+      if (this.value < 50) return 'green'
+      if (this.value < 80) return 'blue'
+      return 'yellow'
     },
     onLoad () {
       if (this.userIsAuthenticated) {

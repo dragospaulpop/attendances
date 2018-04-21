@@ -8,8 +8,13 @@
           <h3 > {{ this.events[id].titlu }} </h3>
           <div> {{ this.events[id].descriere }} </div>
         </v-card-title>
-        <v-card-actions>
-          <v-btn flat color="orange" router to = "/">Back</v-btn>
+        <v-btn color="primary" @click="comment()">Add a comment</v-btn>
+        <v-flex xs8 id="input">
+          <v-text-field label="Add a comment" textarea>
+          </v-text-field>
+        </v-flex>
+         <v-card-actions>
+        <v-btn flat color="orange" router to = "/">Back</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -17,9 +22,10 @@
 </template>
 
 <style scoped>
-
+#input {
+  display:none;
+}
 </style>
-
 
 <script>
   export default {
@@ -32,6 +38,11 @@
     computed: {
       events () {
         return this.$store.getters.events
+      }
+    },
+    methods: {
+      comment () {
+        document.getElementById('input').style.display = 'inline'
       }
     }
   }

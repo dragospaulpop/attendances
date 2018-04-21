@@ -22,21 +22,13 @@
             <v-flex xs12 sm6 offset-sm3>
               <v-text-field
                 name="descriere"
-                label="descriere"
+                label="Descriere"
                 id="descriere"
                 v-model="descriere"
                 required></v-text-field>
             </v-flex>
           </v-layout>
-          <v-layout row>
-            <v-flex xs12 sm6 offset-sm3>
-              <v-btn
-                class="primary"
-                type="submit" 
-                @click="createMeetup">Create Meetup</v-btn>
-            </v-flex>
-          </v-layout>
-        <v-flex xs11 sm5>
+          <v-flex xs12 sm6 offset-sm3>
             <v-menu
               ref="menuevent"
               lazy
@@ -63,6 +55,14 @@
               </v-date-picker>
             </v-menu>
           </v-flex>
+           <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-btn
+                class="primary"
+                type="submit" 
+                @click="createMeetup">Create Meetup</v-btn>
+            </v-flex>
+          </v-layout>
         </form>
       </v-flex>
     </v-layout>

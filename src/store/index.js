@@ -33,13 +33,6 @@ export default new Vuex.Store({
       state.location = payload
     }
   },
-  created () {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.$store.dispatch('autoSignIn', user)
-      }
-    })
-  },
   actions: {
     readEvents ({commit}, payload) {
       return firebase.database().ref('events')
@@ -70,6 +63,10 @@ export default new Vuex.Store({
             }
             commit('setUser', newUser)
             router.push({path: '/'})
+            firebase.database().ref('/users/' + newUser.id).set({
+              nume: payload.nume,
+              prenume: payload.prenume
+            })
           }
         )
         .catch(
@@ -87,11 +84,6 @@ export default new Vuex.Store({
             }
             commit('setUser', newUser)
             // router.push({path: '/'})
-          }
-        )
-        .catch(
-          error => {
-            console.log(error)
           }
         )
     },

@@ -2,16 +2,6 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
-        <v-progress-circular
-          :size="100"
-          :width="15"
-          :rotate="360"
-          :value="value"
-          :color="color"
-        >
-          {{ value }} %
-        </v-progress-circular>
-        {{prezente}} din {{total}}
         <v-list two-line>
           <v-menu offset-y>
             <v-btn color="primary" dark slot="activator">
@@ -157,7 +147,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+ #map {
+   width: 45%;
+   height: 400px;
+   background-color: grey;
+ }
 </style>
 
 
@@ -172,8 +166,6 @@
         menu: false,
         date1: null,
         menu1: false,
-        prezente: 11,
-        total: 30,
         months: [
           {
             nume: 'January',
@@ -237,15 +229,6 @@
       coords () {
         return this.$store.getters.location
       },
-      value () {
-        return Math.floor(this.prezente * 100 / this.total)
-      },
-      color () {
-        if (this.value < 25) return 'red'
-        if (this.value < 50) return 'green'
-        if (this.value < 80) return 'blue'
-        return 'yellow'
-      },
       ani () {
         let ani = []
         this.events.forEach((event, index) => {
@@ -305,7 +288,6 @@
       }
     },
     mounted: function () {
-      console.log('map: ', window.google.maps)
       const map = new window.google.maps.Map(document.getElementById('map'), {
         center: {lat: +this.coords.lat, lng: +this.coords.long},
         zoom: 16
@@ -317,11 +299,3 @@
     }
   }
 </script>
-
-<style>
- #map {
-   width: 100%;
-   height: 400px;
-   background-color: grey;
- }
-</style>

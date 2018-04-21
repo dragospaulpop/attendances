@@ -4,6 +4,18 @@
       <v-flex xs12 sm6 offset-sm3>
         <h1>Sign up</h1>
         <v-text-field
+          label="Nume"
+          v-model="nume"
+          :rules="[rules.required]"
+        >
+        </v-text-field>
+        <v-text-field
+          label="Prenume"
+          v-model="prenume"
+          :rules="[rules.required]"
+        >
+        </v-text-field>
+        <v-text-field
           label="Enter your E-mail"
           v-model="email"
           :rules="[rules.required, rules.email]"
@@ -52,6 +64,8 @@
         password: '',
         confirmPassword: '',
         email: '',
+        nume: null,
+        prenume: null,
         rules: {
           required: (value) => !!value || 'Required.',
           email: (value) => {
