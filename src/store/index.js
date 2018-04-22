@@ -17,7 +17,9 @@ export default new Vuex.Store({
       db: firebase.database()
     },
     user: null,
-    keysEvents: []
+    keysEvents: [],
+    keysUsers: [],
+    userdetails: []
   },
   mutations: {
     setUser (state, payload) {
@@ -29,8 +31,14 @@ export default new Vuex.Store({
     getKeys: (state, payload) => {
       state.keysEvents = payload
     },
+    getKeysUsers: (state, payload) => {
+      state.keysUsers = payload
+    },
     getLocation: (state, payload) => {
       state.location = payload
+    },
+    gotUsers: (state, payload) => {
+      state.userdetails.push(payload)
     }
   },
   actions: {
@@ -53,6 +61,29 @@ export default new Vuex.Store({
         }, function (error) {
           console.log('Error: ' + error.message)
         })
+    },
+    deleteEvent ({state}, payload) {
+      firebase.database().ref('/events/' + this.state.keysEvents[payload]).remove()
+    },
+    getUserData ({commit}, payload) {
+      return firebase.database().ref('users')
+        .on('value', snap => {
+          const myObj = snap.val()
+          const keysUsers = Object.keys(snap.val())
+          keysUsers.forEach(key => {
+            const userdetails = {}
+            userdetails.nume = myObj[key].nume
+            userdetails.prenume = myObj[key].prenume
+            commit('gotUsers', userdetails)
+          })
+          commit('getKeysUsers', keysUsers)
+        }, function (error) {
+          console.log('Error: ' + error.message)
+        })
+    },
+    changeName ({commit, state}, nume) {
+      let uid = state.user.uid
+      firebase.database().ref('users/' + uid).child('nume').set(nume)
     },
     signUp ({commit}, payload) {
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
@@ -121,6 +152,9 @@ export default new Vuex.Store({
   getters: {
     events: state => state.events,
     user: state => state.user,
-    location: state => state.location
+    location: state => state.location,
+    userdetails: state => state.userdetails,
+    keysUsers: state => state.keysUsers,
+    keysEvents: state => state.keysEvents
   }
 })

@@ -85,7 +85,7 @@
     },
     methods: {
       userSignUp () {
-        this.$store.dispatch('signUp', {email: this.email, password: this.password})
+        this.$store.dispatch('signUp', {email: this.email, password: this.password, nume: this.nume, prenume: this.prenume})
       }
     }
   }

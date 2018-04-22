@@ -5,6 +5,7 @@ import Events from '@/components/Events'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Admin from '@/components/Admin'
+import Profile from '@/components/Profile'
 import createMeetup from '@/components/createMeetup'
 import AuthGuard from './authGuard'
 
@@ -32,6 +33,11 @@ export default new Router({
       path: '/admin',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile
     },
     {
       path: '/createmeetup',

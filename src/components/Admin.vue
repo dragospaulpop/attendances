@@ -141,7 +141,7 @@
               <v-list-tile-action-text>
                 {{event.data | filtru}}
               </v-list-tile-action-text>
-            <v-icon @click="nrEvent = index" style="cursor:pointer">
+            <v-icon @click="deleteEvent(index)" style="cursor:pointer">
               delete
             </v-icon>
             </v-list-tile-action>
@@ -234,6 +234,9 @@
       events () {
         return this.$store.getters.events
       },
+      keysevents () {
+        return this.$store.getters.keysEvents
+      },
       value () {
         return Math.floor(this.prezente * 100 / this.total)
       },
@@ -283,7 +286,7 @@
     },
     methods: {
       deleteEvent (index) {
-        return firebase.database().ref().delete()
+        this.$store.dispatch('deleteEvent', index)
       }
     },
     filters: {

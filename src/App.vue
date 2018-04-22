@@ -11,6 +11,9 @@
       app
     >
       <h1>My profile</h1>
+       <v-btn color="primary" router to = "/profile">
+              My Profile
+          </v-btn>
       <v-progress-circular
         :size="100"
         :width="15"
@@ -90,6 +93,7 @@ export default {
   created: function () {
     this.$store.dispatch('readEvents')
     this.$store.dispatch('AuthChange')
+    this.$store.dispatch('getUserData')
   },
   computed: {
     events () {
