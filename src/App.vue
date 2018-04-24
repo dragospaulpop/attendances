@@ -12,8 +12,8 @@
     >
       <h1>My profile</h1>
        <v-btn color="primary" router to = "/profile">
-              My Profile
-          </v-btn>
+            My Profile
+        </v-btn>
       <v-progress-circular
         :size="100"
         :width="15"
@@ -24,7 +24,9 @@
           {{ value }} %
         </v-progress-circular>
         {{prezente}} din {{total}}
-      <v-chip close v-model="chip1" @click="onSignOut">Sign out</v-chip>
+      <v-btn color="primary" @click="onSignOut">
+          Sign out
+      </v-btn>
       <v-list>
         <v-list-tile
           value="true"
@@ -72,7 +74,6 @@
 export default {
   data () {
     return {
-      chip1: true,
       clipped: false,
       drawer: false,
       fixed: false,

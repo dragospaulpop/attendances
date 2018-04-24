@@ -23,6 +23,7 @@
         >
         </v-text-field>
         <v-btn color="primary" type="submit" @click="userSignin">Login</v-btn>  
+         <v-btn color="primary" type="submit" @click="forgotPassword">Forgot password</v-btn>  
         <v-btn color="primary" type="submit" to="/signup">Sign Up</v-btn>  
       </v-flex>
     </v-layout>
@@ -35,6 +36,7 @@
 
 
 <script>
+  import firebase from '@/firebase'
   export default {
     name: 'login',
     data () {
@@ -59,6 +61,14 @@
     methods: {
       userSignin () {
         this.$store.dispatch('signIn', {email: this.email, password: this.password})
+      },
+      forgotPassword () {
+        const emailprompt = prompt('Introdu emailul pentru care doresti recuperarea parolei', '')
+        firebase.auth().sendPasswordResetEmail(emailprompt).then(function () {
+          window.alert('A fost trimis un email de recuperare a parolei la adresa: ' + emailprompt)
+        }).catch(function (error) {
+          window.alert(error.message)
+        })
       }
     }
   }

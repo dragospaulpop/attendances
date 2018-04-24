@@ -65,14 +65,13 @@
               v-model="menu"
               transition="scale-transition"
               offset-y
-              full-width
               :nudge-right="40"
               min-width="290px"
               :return-value.sync="date"
             >
               <v-text-field
                 slot="activator"
-                label="Data de start"
+                label="Start date"
                 v-model="date"
                 prepend-icon="event"
                 readonly
@@ -92,14 +91,13 @@
               v-model="menu1"
               transition="scale-transition"
               offset-y
-              full-width
               :nudge-right="40"
               min-width="290px"
               :return-value.sync="date1"
             >
               <v-text-field
                 slot="activator"
-                label="Data de final"
+                label="End date"
                 v-model="date1"
                 prepend-icon="event"
                 readonly
@@ -237,16 +235,6 @@
           }
         })
         return ani
-      },
-      clickableMonths () {
-        let months = []
-        this.events.forEach((event, index) => {
-          let month = event.data.getMonth()
-          if (!months.includes(month)) {
-            months.push(month)
-          }
-        })
-        return months
       },
       filterEvents () {
         return this.events.filter(event => {

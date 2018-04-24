@@ -1,48 +1,93 @@
-<template>
-  <v-layout>
-    <v-container fluid>
-      <v-flex xs8 v-if="editdata===true">
+ <template>
+   <v-container grid-list-sm class="pa-4">
+     <v-layout wrap>
+       <v-flex xs12>
         <v-text-field
-          name="input-1-3"
-          label="Nume"
-          single-line
+          name="nume"
+          :value = getuserdetails.nume
+          id="nume"
         ></v-text-field>
       </v-flex>
-      <v-flex xs8 v-else>
-         Nume : {{getuserdetails.nume}}
-      </v-flex>
-      <v-flex xs8 v-if="editdata===true">
+      <v-flex xs6>
         <v-text-field
-          name="input-1-3"
-          label="Prenume"
-          single-line
+          name="prenume"
+          :value = getuserdetails.prenume
+          id="prenume"
         ></v-text-field>
       </v-flex>
-      <v-flex xs8 v-else>
-         Prenume : {{getuserdetails.prenume}}
-      </v-flex>
-      <v-btn @click="editdetails" v-if="editdata===false">
-        Modifica datele
-      </v-btn>
-      <v-btn @click="savenewdetails" v-if="editdata===true">
+       <v-flex xs12>
+        <v-text-field
+          name="parolaactuala"
+          label="Parolă actuală"
+          hint="Minim 8 caractere"
+          v-model="oldpass"
+          min="8"
+          :type="e1 ? 'password' : 'text'"
+          id = "oldpsw"
+          required
+        >
+        </v-text-field>
+       </v-flex>
+       <v-flex xs6>
+         <v-text-field
+             label="Parolă nouă"
+             name="parolanoua"
+             hint="Minim 8 caractere"
+             v-model="password"
+             min="8"
+             :append-icon-cb="() => (e1 = !e1)"
+             :type="e1 ? 'password' : 'text'"
+             counter
+           >
+           </v-text-field>
+         </v-flex>
+         <v-flex xs6>
+           <v-text-field
+             name="parolanouaconfirm"
+             label="Confirmă parolă nouă"
+             hint="Minim 8 caractere"
+             v-model="confirmPassword"
+             min="8"
+             :type="e1 ? 'password' : 'text'"
+             :rules="[comparePasswords]"
+             id = "newpsw"
+           >
+         </v-text-field>
+       </v-flex>
+      <v-btn @click="savenewdetails">
         Salveaza datele
       </v-btn>
-    </v-container>
-   </v-layout>
-</template>
+      <v-btn flat color="primary" router to = "/">Back</v-btn>
+    </v-layout>
+   </v-container>
+ </template>
 
 <script>
+import firebase from '@/firebase'
 export default {
   name: 'Profile',
   data () {
     return {
-      editdata: false,
-      savedata: false
+      password: '',
+      email: '',
+      e1: true,
+      oldpass: '',
+      confirmPassword: '',
+      user1: null,
+      rules: {
+        email: (value) => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || 'Email invalid.'
+        }
+      }
     }
   },
   computed: {
     user () {
       return this.$store.getters.user
+    },
+    comparePasswords () {
+      return this.password !== this.confirmPassword ? 'Parolele nu corespund' : ''
     },
     events () {
       return this.$store.getters.events
@@ -60,14 +105,22 @@ export default {
     }
   },
   methods: {
-    editdetails () {
-      this.editdata = true
-      this.savedata = false
-    },
     savenewdetails () {
-      this.editdata = false
-      this.savedata = true
-      this.$store.dispatch('changeName', this.nume)
+      const nume = document.getElementById('nume').value
+      const prenume = document.getElementById('prenume').value
+      const cale = firebase.database().ref('users/' + this.user.uid)
+      const parolanoua = document.getElementById('newpsw').value
+      cale.update({nume: nume, prenume: prenume})
+      firebase.auth().signInWithEmailAndPassword(this.user.email, this.oldpass).then(function () {
+        cale.update({nume: nume, prenume: prenume})
+        firebase.auth().currentUser.updatePassword(parolanoua).then(function () {
+          window.alert('Parola a fost schimbată')
+        }).catch(function (error) {
+          console.log(error.message)
+        })
+      }).catch(function (error) {
+        console.log(error.message)
+      })
     }
   }
 }

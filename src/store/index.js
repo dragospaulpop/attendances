@@ -81,10 +81,6 @@ export default new Vuex.Store({
           console.log('Error: ' + error.message)
         })
     },
-    changeName ({commit, state}, nume) {
-      let uid = state.user.uid
-      firebase.database().ref('users/' + uid).child('nume').set(nume)
-    },
     signUp ({commit}, payload) {
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
         .then(
