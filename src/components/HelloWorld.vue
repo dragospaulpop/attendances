@@ -57,7 +57,7 @@
           <v-btn color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
               Reset
           </v-btn>
-          <v-flex xs11 sm5> 
+          <v-flex xs6> 
             <v-menu
               ref="menu"
               lazy
@@ -83,7 +83,7 @@
               </v-date-picker>
             </v-menu>
           </v-flex>
-          <v-flex xs11 sm5>
+          <v-flex xs6>
             <v-menu
               ref="menu1"
               lazy
@@ -128,12 +128,9 @@
               <v-list-tile-action-text>
                 {{event.data | filtru}}
               </v-list-tile-action-text>
-              <v-icon :class="{
-                'green--text':event.prezenta,
-                'red--text':!event.prezenta
-              }" @click="event.prezenta=!event.prezenta">
-                {{event.prezenta ? "star" : "star_border"}}
-              </v-icon>
+              <v-btn @click="addGoing(index)" class>
+                Particip
+              </v-btn>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
@@ -163,6 +160,8 @@
         menu: false,
         date1: null,
         menu1: false,
+        ceva: false,
+        id: null,
         months: [
           {
             nume: 'January',
@@ -223,6 +222,12 @@
       events () {
         return this.$store.getters.events
       },
+      keysEvents () {
+        return this.$store.getters.keysEvents
+      },
+      eventsGoing () {
+        return this.$store.getters.eventsGoing
+      },
       coords () {
         return this.$store.getters.location
       },
@@ -269,9 +274,18 @@
         return moment(date).fromNow()
       }
     },
+    created: function () {
+      this.$store.dispatch('getEventsGoing')
+    },
     methods: {
       getLocation () {
         this.$store.dispatch('getLocation')
+      },
+      addGoing (index) {
+        const distanta = (Math.sqrt(Math.pow((+this.coords.lat - 44.4336509), 2) + Math.pow((+this.coords.long - 26.0772394), 2)) * 100 * 1000)
+        if (+distanta > 100) {
+          this.$store.dispatch('Going', index)
+        }
       }
     },
     mounted: function () {

@@ -63,7 +63,7 @@
         this.$store.dispatch('signIn', {email: this.email, password: this.password})
       },
       forgotPassword () {
-        const emailprompt = prompt('Introdu emailul pentru care doresti recuperarea parolei', '')
+        const emailprompt = prompt('Introdu adresa de email', '')
         firebase.auth().sendPasswordResetEmail(emailprompt).then(function () {
           window.alert('A fost trimis un email de recuperare a parolei la adresa: ' + emailprompt)
         }).catch(function (error) {

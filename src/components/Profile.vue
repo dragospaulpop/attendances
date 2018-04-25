@@ -8,7 +8,7 @@
           id="nume"
         ></v-text-field>
       </v-flex>
-      <v-flex xs6>
+      <v-flex xs12>
         <v-text-field
           name="prenume"
           :value = getuserdetails.prenume

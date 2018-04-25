@@ -19,7 +19,8 @@ export default new Vuex.Store({
     user: null,
     keysEvents: [],
     keysUsers: [],
-    userdetails: []
+    userdetails: [],
+    eventsGoing: []
   },
   mutations: {
     setUser (state, payload) {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     },
     gotUsers: (state, payload) => {
       state.userdetails.push(payload)
+    },
+    eventsGoing: (state, payload) => {
+      state.eventsGoing.push(payload)
     }
   },
   actions: {
@@ -143,6 +147,26 @@ export default new Vuex.Store({
         window.alert(error.message)
       }, { enableHighAccuracy: true,
         maximumAge: 0 })
+    },
+    changeDetails (payload) {
+      const cale = firebase.database().ref('users/' + this.state.user.uid)
+      console.log(cale)
+      console.log(payload.nume, payload.prenume)
+      cale.update({nume: payload.nume, prenume: payload.prenume})
+    },
+    getEventsGoing ({commit}) {
+      return firebase.database().ref('/users/' + this.state.user.uid + '/participari')
+        .on('value', snap => {
+          const participari = Object.keys(snap.val())
+          commit('eventsGoing', participari)
+        })
+    },
+    Going ({commit}, payload) {
+      const user = this.state.user.uid
+      return firebase.database().ref('/users/' + user + '/participari/' + this.state.keysEvents[payload])
+        .set({
+          text: true
+        })
     }
   },
   getters: {
