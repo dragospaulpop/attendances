@@ -11,22 +11,30 @@
       app
     >
       <h1>My profile</h1>
-       <v-btn color="primary" router to = "/profile">
-            My Profile
-        </v-btn>
-      <v-progress-circular
-        :size="100"
-        :width="15"
-        :rotate="360"
-        :value="value"
-        :color="color"
+      <v-flex xs12>
+        <v-progress-circular
+          :size="100"
+          :width="15"
+          :rotate="360"
+          :value="value"
+          :color="color"
         >
           {{ value }} %
         </v-progress-circular>
-        {{prezente}} din {{total}}
-      <v-btn color="primary" @click="onSignOut">
-          Sign out
-      </v-btn>
+      </v-flex>
+       <v-flex xs12> 
+        {{totalParticipari}} din {{totalEvents}}
+      </v-flex>
+      <v-flex xs12>
+        <v-btn color="primary" router to = "/profile">
+          Account details  
+        </v-btn>
+      </v-flex>
+      <v-flex xs12>
+        <v-btn color="primary" @click="onSignOut">
+            Sign out
+        </v-btn>
+      </v-flex>
       <v-list>
         <v-list-tile
           value="true"
@@ -85,8 +93,6 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'v. Narcisa',
-      prezente: 11,
-      total: 30,
       links: ['Home', 'About Us', 'Contact Us']
     }
   },
@@ -100,8 +106,14 @@ export default {
     events () {
       return this.$store.getters.events
     },
+    totalEvents () {
+      return this.$store.getters.events.length
+    },
+    totalParticipari () {
+      return this.$store.getters.eventParticip.length
+    },
     value () {
-      return Math.floor(this.prezente * 100 / this.total)
+      return Math.floor(this.totalParticipari * 100 / this.totalEvents)
     },
     color () {
       if (this.value < 25) return 'red'

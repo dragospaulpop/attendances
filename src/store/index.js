@@ -20,7 +20,8 @@ export default new Vuex.Store({
     keysEvents: [],
     keysUsers: [],
     userdetails: [],
-    eventsGoing: []
+    eventsGoing: [],
+    eventParticip: []
   },
   mutations: {
     setUser (state, payload) {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     },
     getEvents: (state, payload) => {
       state.events.push(payload)
+    },
+    eventParticip: (state, payload) => {
+      state.eventParticip.push(payload)
     },
     getKeys: (state, payload) => {
       state.keysEvents = payload
@@ -157,7 +161,13 @@ export default new Vuex.Store({
     getEventsGoing ({commit}) {
       return firebase.database().ref('/users/' + this.state.user.uid + '/participari')
         .on('value', snap => {
+          const myObj = snap.val()
           const participari = Object.keys(snap.val())
+          participari.forEach(key => {
+            var eventParticip = {}
+            eventParticip.key = myObj[key].key
+            commit('eventParticip', eventParticip)
+          })
           commit('eventsGoing', participari)
         })
     },
@@ -175,6 +185,7 @@ export default new Vuex.Store({
     location: state => state.location,
     userdetails: state => state.userdetails,
     keysUsers: state => state.keysUsers,
-    keysEvents: state => state.keysEvents
+    keysEvents: state => state.keysEvents,
+    eventParticip: state => state.eventParticip
   }
 })

@@ -125,12 +125,12 @@
               </router-link>
             </v-list-tile-content>
             <v-list-tile-action>
+              <v-btn color="primary" @click="addGoing(index)">
+                Attend
+              </v-btn>
               <v-list-tile-action-text>
                 {{event.data | filtru}}
               </v-list-tile-action-text>
-              <v-btn @click="addGoing(index)" class>
-                Particip
-              </v-btn>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
