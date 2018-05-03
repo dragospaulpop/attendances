@@ -1,6 +1,14 @@
  <template>
-   <v-container grid-list-sm class="pa-4">
+   <v-container>
      <v-layout wrap>
+       <v-flex xs6>
+         <v-btn color="primary" @click="addPicture">Select profile pic</v-btn>
+         <input type="file" style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
+         <v-btn color="primary" @click="touploadPicture">Update profile pic</v-btn>
+       </v-flex>
+       <v-flex xs6>
+        <img :src="imageUrl" height="150">
+       </v-flex>
        <v-flex xs12>
         <v-text-field
           name="nume"
@@ -74,6 +82,8 @@ export default {
       oldpass: '',
       confirmPassword: '',
       user1: null,
+      imageUrl: '',
+      image: null,
       rules: {
         email: (value) => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -121,6 +131,25 @@ export default {
       }).catch(function (error) {
         console.log(error.message)
       })
+    },
+    addPicture () {
+      this.$refs.pictureInput.click()
+    },
+    pictureSelect (event) {
+      const files = event.target.files
+      let fileName = files[0].name
+      if (fileName.lastIndexOf('.') <= 0) {
+        return alert('Please add a valid file!')
+      }
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+        this.imageUrl = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      this.imageUrl = files[0]
+    },
+    touploadPicture () {
+      return this.$store.getters.dispatch.uploadPicture
     }
   }
 }

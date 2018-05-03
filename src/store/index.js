@@ -21,7 +21,8 @@ export default new Vuex.Store({
     keysUsers: [],
     userdetails: [],
     eventsGoing: [],
-    eventParticip: []
+    eventParticip: [],
+    uploadPicture: []
   },
   mutations: {
     setUser (state, payload) {
@@ -29,9 +30,6 @@ export default new Vuex.Store({
     },
     getEvents: (state, payload) => {
       state.events.push(payload)
-    },
-    eventParticip: (state, payload) => {
-      state.eventParticip.push(payload)
     },
     getKeys: (state, payload) => {
       state.keysEvents = payload
@@ -46,13 +44,23 @@ export default new Vuex.Store({
       state.userdetails.push(payload)
     },
     eventsGoing: (state, payload) => {
-      state.eventsGoing.push(payload)
+      state.eventsGoing = payload
+    },
+    uploadPicture (state, payload) {
+      state.uploadPicture.push(payload)
+    },
+    emptyEvents: (state, payload) => {
+      state.events = []
+    },
+    emptyGoing: (state, payload) => {
+      state.eventsGoing = []
     }
   },
   actions: {
     readEvents ({commit}, payload) {
       return firebase.database().ref('events')
         .on('value', snap => {
+          commit('emptyEvents')
           const myObj = snap.val()
           const keys = Object.keys(snap.val())
           keys.forEach(key => {
@@ -82,6 +90,7 @@ export default new Vuex.Store({
             const userdetails = {}
             userdetails.nume = myObj[key].nume
             userdetails.prenume = myObj[key].prenume
+            userdetails.image = myObj[key].image
             commit('gotUsers', userdetails)
           })
           commit('getKeysUsers', keysUsers)
@@ -100,7 +109,8 @@ export default new Vuex.Store({
             router.push({path: '/'})
             firebase.database().ref('/users/' + newUser.id).set({
               nume: payload.nume,
-              prenume: payload.prenume
+              prenume: payload.prenume,
+              participari: ''
             })
           }
         )
@@ -161,13 +171,8 @@ export default new Vuex.Store({
     getEventsGoing ({commit}) {
       return firebase.database().ref('/users/' + this.state.user.uid + '/participari')
         .on('value', snap => {
-          const myObj = snap.val()
+          commit('emptyGoing')
           const participari = Object.keys(snap.val())
-          participari.forEach(key => {
-            var eventParticip = {}
-            eventParticip.key = myObj[key].key
-            commit('eventParticip', eventParticip)
-          })
           commit('eventsGoing', participari)
         })
     },
@@ -176,6 +181,37 @@ export default new Vuex.Store({
       return firebase.database().ref('/users/' + user + '/participari/' + this.state.keysEvents[payload])
         .set({
           text: true
+        })
+    },
+    uploadPicture ({commit}, payload) {
+      let user = this.$store.getters.user.uid
+      let imageUrl = null
+      let key
+      firebase.database().ref('/users/' + this.$store.getters.user.uid).push(user)
+        .then((data) => {
+          key = data.key
+          return key
+        })
+        .then(key => {
+          const filename = payload.image.name
+          console.log('filename', filename)
+          const ext = filename.slice(filename.lastIndexOf('.'))
+          return firebase.storage().ref('/users/' + this.$store.getters.user.uid + '.' + ext).put(payload.image)
+        })
+        .then(fileData => {
+          imageUrl = fileData.metadata.downloadURLs[0]
+          console.log(imageUrl)
+          return firebase.database().ref('/users/').child(key).update({imageUrl: imageUrl})
+        })
+        .then(() => {
+          commit('uploadPicture', {
+            ...user,
+            imageUrl: imageUrl,
+            id: key
+          })
+        })
+        .catch((error) => {
+          console.log(error)
         })
     }
   },
@@ -186,6 +222,7 @@ export default new Vuex.Store({
     userdetails: state => state.userdetails,
     keysUsers: state => state.keysUsers,
     keysEvents: state => state.keysEvents,
-    eventParticip: state => state.eventParticip
+    eventsGoing: state => state.eventsGoing,
+    uploadPicture: state => state.uploadPicture
   }
 })

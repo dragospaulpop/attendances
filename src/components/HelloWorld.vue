@@ -18,8 +18,7 @@
               </v-list-tile>
             </v-list>
             <v-list>
-              <v-list-tile v-for="(month, index) in months" :key="index" @click="filter.luna = index" 
-               :class="{'black--text':month.clickable, 'grey--text':!month.clickable}">
+              <v-list-tile v-for="(month, index) in months" :key="index" @click="filter.luna = index">
                 <v-list-tile-title> 
                   {{month.nume}} 
                   <template v-if="index === filter.luna">

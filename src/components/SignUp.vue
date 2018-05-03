@@ -66,6 +66,7 @@
         email: '',
         nume: null,
         prenume: null,
+        image: null,
         rules: {
           required: (value) => !!value || 'Required.',
           email: (value) => {

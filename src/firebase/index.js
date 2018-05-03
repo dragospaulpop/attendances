@@ -5,7 +5,7 @@ const config = {
   authDomain: 'attendances-62382.firebaseapp.com',
   databaseURL: 'https://attendances-62382.firebaseio.com',
   projectId: 'attendances-62382',
-  storageBucket: '',
+  storageBucket: 'gs://attendances-62382.appspot.com',
   messagingSenderId: '877869699076'
 }
 

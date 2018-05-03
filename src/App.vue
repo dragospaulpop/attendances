@@ -110,7 +110,7 @@ export default {
       return this.$store.getters.events.length
     },
     totalParticipari () {
-      return this.$store.getters.eventParticip.length
+      return this.$store.getters.eventsGoing.length
     },
     value () {
       return Math.floor(this.totalParticipari * 100 / this.totalEvents)
