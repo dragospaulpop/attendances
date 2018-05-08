@@ -88,7 +88,8 @@
             avatar: 'http://lorempixel.com/100/100/',
             descriere: this.descriere,
             data: this.dateevent,
-            prezenta: false
+            prezenta: false,
+            comments: ''
           })
       }
     }

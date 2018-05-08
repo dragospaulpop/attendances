@@ -124,8 +124,11 @@
               </router-link>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn color="primary" @click="addGoing(index)">
+              <v-btn @click="addGoing(index)" v-if="areyougoing.indexOf(index) === -1">
                 Attend
+              </v-btn>
+              <v-btn disabled v-else>
+                Going
               </v-btn>
               <v-list-tile-action-text>
                 {{event.data | filtru}}
@@ -266,6 +269,13 @@
           }
           return matchingYears && matchingMonths && beforeData && afterData && betweenData
         })
+      },
+      areyougoing () {
+        var keys = []
+        for (var i = 0; i < this.eventsGoing.length; i++) {
+          keys.push(this.keysEvents.indexOf(this.eventsGoing[i]))
+        }
+        return keys
       }
     },
     filters: {

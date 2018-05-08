@@ -21,7 +21,6 @@ export default new Vuex.Store({
     keysUsers: [],
     userdetails: [],
     eventsGoing: [],
-    eventParticip: [],
     uploadPicture: []
   },
   mutations: {
