@@ -85,10 +85,12 @@ a, ul, li {
         this.commentAdd = false
       },
       postComment () {
+        this.commentAdd = false
         firebase.database().ref('/events/' + this.keysEvents[this.id] + '/comments/')
           .push({
             comment: document.getElementById('textInput').value
           })
+        document.getElementById('input').style.display = 'none'
       }
     }
   }

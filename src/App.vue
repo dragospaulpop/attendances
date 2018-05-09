@@ -23,7 +23,7 @@
         </v-progress-circular>
       </v-flex>
        <v-flex xs12> 
-        {{totalParticipari}} din {{totalEvents}}
+        going to {{totalParticipari}} events from a total of {{totalEvents}}
       </v-flex>
       <v-flex xs12>
         <v-btn color="primary" router to = "/profile">

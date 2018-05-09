@@ -60,7 +60,7 @@
               <v-btn
                 class="primary"
                 type="submit" 
-                @click="createMeetup">Create Meetup</v-btn>
+                @click="createMeetup" route to='/'>Create Meetup</v-btn>
             </v-flex>
           </v-layout>
         </form>

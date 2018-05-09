@@ -127,7 +127,14 @@ export default new Vuex.Store({
               id: user.uid
             }
             commit('setUser', newUser)
-            // router.push({path: '/'})
+            firebase.database().ref('users/' + newUser.id)
+              .on('value', snap => {
+                const myObj = snap.val()
+                var admin = myObj.admin
+                commit('getAdmin', admin)
+              }, function (error) {
+                console.log('Error: ' + error.message)
+              })
           }
         )
     },
@@ -222,6 +229,7 @@ export default new Vuex.Store({
     keysUsers: state => state.keysUsers,
     keysEvents: state => state.keysEvents,
     eventsGoing: state => state.eventsGoing,
+    admin: state => state.admin,
     uploadPicture: state => state.uploadPicture
   }
 })
