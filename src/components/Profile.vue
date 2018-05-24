@@ -164,7 +164,7 @@ export default {
         console.log('Done. Enjoy', downloadURL)
         this.image = downloadURL
       })
-      // push in databasesdas
+      // push in databasesdasawefcweasd
       return firebase.database().ref('/users/' + this.user.uid + '/image/').set({
         image: this.image
       })
