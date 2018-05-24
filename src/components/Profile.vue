@@ -153,20 +153,21 @@ export default {
       const storageRef = firebase.storage().ref('/users/' + filesName)
       const uploadTask = storageRef.put(selectedFile)
       // push in storage
-      uploadTask.on('state_changed', function (snapshot) {
+      uploadTask.on('state_changed', snapshot => {
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         console.log('Upload is ' + progress + '% done')
-      }, function (error) {
+      }, error => {
         console.log(error)
-      }, function () {
+      }, () => {
         console.log('succes')
         var downloadURL = uploadTask.snapshot.downloadURL
         console.log('Done. Enjoy', downloadURL)
+        this.image = downloadURL
       })
       // push in database
-      // firebase.database().ref('/users/' + this.user.uid + '/image/').push({
-      //   image: this.downloadURL
-      // })
+      return firebase.database().ref('/users/' + this.user.uid + '/image/').set({
+        image: this.image
+      })
     }
   }
 }
