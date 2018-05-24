@@ -1,32 +1,36 @@
  <template>
-   <v-container>
+   <v-container fluid grid-list-xl>
      <v-layout wrap>
        <v-flex xs6>
-         <v-btn color="primary" @click="addPicture">Select profile pic</v-btn>
-         <input type="file" style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
-         <v-btn color="primary" @click="touploadPicture">Update profile pic</v-btn>
+        <v-btn color="primary" @click="addPicture" :value = "pictureSelect">Select profile pic</v-btn>
+        <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
+
+        <!-- <v-btn color="primary" @click="touploadPicture">Update profile pic</v-btn> -->
        </v-flex>
        <v-flex xs6>
         <img :src="imageUrl" height="150">
        </v-flex>
-       <v-flex xs12>
+       <v-flex xs6>
         <v-text-field
           name="nume"
+          label="Last name"
           :value = getuserdetails.nume
           id="nume"
         ></v-text-field>
+        <v-spacer></v-spacer>
       </v-flex>
-      <v-flex xs12>
+      <v-flex xs6>
         <v-text-field
           name="prenume"
+          label="First name"
           :value = getuserdetails.prenume
           id="prenume"
         ></v-text-field>
       </v-flex>
-       <v-flex xs12>
+       <v-flex xs6>
         <v-text-field
           name="parolaactuala"
-          label="Parolă actuală"
+          label="Current password"
           hint="Minim 8 caractere"
           v-model="oldpass"
           min="8"
@@ -38,7 +42,7 @@
        </v-flex>
        <v-flex xs6>
          <v-text-field
-             label="Parolă nouă"
+             label="New password"
              name="parolanoua"
              hint="Minim 8 caractere"
              v-model="password"
@@ -52,7 +56,7 @@
          <v-flex xs6>
            <v-text-field
              name="parolanouaconfirm"
-             label="Confirmă parolă nouă"
+             label="Confirm new password"
              hint="Minim 8 caractere"
              v-model="confirmPassword"
              min="8"
@@ -62,10 +66,10 @@
            >
          </v-text-field>
        </v-flex>
-      <v-btn @click="savenewdetails">
-        Salveaza datele
-      </v-btn>
-      <v-btn flat color="primary" router to = "/">Back</v-btn>
+       <v-flex xs12>
+        <v-btn @click="savenewdetails">Salveaza datele</v-btn>
+        <v-btn flat color="primary" router to = "/">Back</v-btn>
+       </v-flex>
     </v-layout>
    </v-container>
  </template>
@@ -84,6 +88,8 @@ export default {
       user1: null,
       imageUrl: '',
       image: null,
+      selectedFile: null,
+      downloadURL: null,
       rules: {
         email: (value) => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -135,21 +141,32 @@ export default {
     addPicture () {
       this.$refs.pictureInput.click()
     },
-    pictureSelect (event) {
-      const files = event.target.files
-      let fileName = files[0].name
-      if (fileName.lastIndexOf('.') <= 0) {
-        return alert('Please add a valid file!')
-      }
+    pictureSelect (payload) {
+      const selectedFile = payload.target.files[0]
+      const filesName = this.user.uid
       const fileReader = new FileReader()
       fileReader.addEventListener('load', () => {
         this.imageUrl = fileReader.result
       })
-      fileReader.readAsDataURL(files[0])
-      this.imageUrl = files[0]
-    },
-    touploadPicture () {
-      return this.$store.getters.dispatch.uploadPicture
+      fileReader.readAsDataURL(selectedFile)
+      this.imageUrl = selectedFile
+      const storageRef = firebase.storage().ref('/users/' + filesName)
+      const uploadTask = storageRef.put(selectedFile)
+      // push in storage
+      uploadTask.on('state_changed', function (snapshot) {
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        console.log('Upload is ' + progress + '% done')
+      }, function (error) {
+        console.log(error)
+      }, function () {
+        console.log('succes')
+        var downloadURL = uploadTask.snapshot.downloadURL
+        console.log('Done. Enjoy', downloadURL)
+      })
+      // push in database
+      // firebase.database().ref('/users/' + this.user.uid + '/image/').push({
+      //   image: this.downloadURL
+      // })
     }
   }
 }

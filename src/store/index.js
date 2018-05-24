@@ -21,6 +21,8 @@ export default new Vuex.Store({
     keysUsers: [],
     userdetails: [],
     eventsGoing: [],
+    admin: null,
+    image: null,
     uploadPicture: []
   },
   mutations: {
@@ -53,6 +55,9 @@ export default new Vuex.Store({
     },
     emptyGoing: (state, payload) => {
       state.eventsGoing = []
+    },
+    getAdmin: (state, payload) => {
+      state.admin = payload
     }
   },
   actions: {
@@ -109,6 +114,8 @@ export default new Vuex.Store({
             firebase.database().ref('/users/' + newUser.id).set({
               nume: payload.nume,
               prenume: payload.prenume,
+              admin: false,
+              image: '',
               participari: ''
             })
           }
@@ -187,37 +194,6 @@ export default new Vuex.Store({
       return firebase.database().ref('/users/' + user + '/participari/' + this.state.keysEvents[payload])
         .set({
           text: true
-        })
-    },
-    uploadPicture ({commit}, payload) {
-      let user = this.$store.getters.user.uid
-      let imageUrl = null
-      let key
-      firebase.database().ref('/users/' + this.$store.getters.user.uid).push(user)
-        .then((data) => {
-          key = data.key
-          return key
-        })
-        .then(key => {
-          const filename = payload.image.name
-          console.log('filename', filename)
-          const ext = filename.slice(filename.lastIndexOf('.'))
-          return firebase.storage().ref('/users/' + this.$store.getters.user.uid + '.' + ext).put(payload.image)
-        })
-        .then(fileData => {
-          imageUrl = fileData.metadata.downloadURLs[0]
-          console.log(imageUrl)
-          return firebase.database().ref('/users/').child(key).update({imageUrl: imageUrl})
-        })
-        .then(() => {
-          commit('uploadPicture', {
-            ...user,
-            imageUrl: imageUrl,
-            id: key
-          })
-        })
-        .catch((error) => {
-          console.log(error)
         })
     }
   },
