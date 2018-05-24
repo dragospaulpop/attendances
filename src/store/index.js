@@ -75,6 +75,7 @@ export default new Vuex.Store({
             eventdetails.prezenta = myObj[key].prezenta
             eventdetails.titlu = myObj[key].titlu
             eventdetails.data = new Date(myObj[key].data)
+            eventdetails.prezenti = myObj[key].prezenti
             commit('getEvents', eventdetails)
           })
           commit('getKeys', keys)
@@ -194,6 +195,12 @@ export default new Vuex.Store({
       return firebase.database().ref('/users/' + user + '/participari/' + this.state.keysEvents[payload])
         .set({
           text: true
+        })
+    },
+    setPrezenti ({state}, payload) {
+      return firebase.database().ref('/events/' + this.state.keysEvents[payload])
+        .update({
+          prezenti: +this.state.events[payload].prezenti + 1
         })
     }
   },
