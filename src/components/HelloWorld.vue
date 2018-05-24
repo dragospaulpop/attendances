@@ -56,7 +56,7 @@
           <v-btn color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
               Reset
           </v-btn>
-          <v-flex xs6> 
+          <v-flex xs12> 
             <v-menu
               ref="menu"
               lazy
@@ -81,8 +81,6 @@
                 </v-spacer>
               </v-date-picker>
             </v-menu>
-          </v-flex>
-          <v-flex xs6>
             <v-menu
               ref="menu1"
               lazy
@@ -136,7 +134,7 @@
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
-         <div id="map"></div>
+        <div id="map"></div>
       </v-layout>
     </v-slide-y-transition>
   </v-container>

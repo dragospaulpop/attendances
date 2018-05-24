@@ -10,30 +10,46 @@
       fixed
       app
     >
-      <h1>My profile</h1>
-      <v-flex xs12>
-        <v-progress-circular
-          :size="100"
-          :width="15"
-          :rotate="360"
-          :value="value"
-          :color="color"
-        >
-          {{ value }} %
-        </v-progress-circular>
+      <div id="text">
+        <h1>Welcome</h1>
+        <v-flex xs12>
+          <v-progress-circular
+            :size="110"
+            :width="15"
+            :rotate="360"
+            :value="value"
+            :color="color"
+          >
+            {{ value }} %
+          </v-progress-circular>
+        </v-flex>
+        <v-flex xs12> 
+          {{totalParticipari}} events out of {{totalEvents}}
+        </v-flex>
+      </div>
+      <v-flex xs12> 
+      <v-list-tile router to = "/">
+        <v-list-tile-action>
+          <v-icon>home</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title>Home</v-list-tile-title>
+      </v-list-tile>
       </v-flex>
-       <v-flex xs12> 
-        going to {{totalParticipari}} events from a total of {{totalEvents}}
+      <v-flex xs12> 
+      <v-list-tile router to = "/profile">
+        <v-list-tile-action>
+          <v-icon>account_circle</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title>Account info</v-list-tile-title>
+      </v-list-tile>
       </v-flex>
-      <v-flex xs12>
-        <v-btn color="primary" router to = "/profile">
-          Account details  
-        </v-btn>
-      </v-flex>
-      <v-flex xs12>
-        <v-btn color="primary" @click="onSignOut">
-            Sign out
-        </v-btn>
+      <v-flex xs12> 
+      <v-list-tile  @click="onSignOut">
+        <v-list-tile-action>
+          <v-icon>settings</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title>Sign Out</v-list-tile-title>
+      </v-list-tile>
       </v-flex>
       <v-list>
         <v-list-tile
@@ -78,11 +94,24 @@
   </v-app>
 </template>
 
+<style>
+a, ul, li {
+  text-decoration: none;
+  list-style-type: none;
+
+}
+#text {
+  margin: 0;
+  padding: 10% 0% 10% 0%;
+  text-align: center;
+}
+</style>
+
 <script>
 export default {
   data () {
     return {
-      clipped: false,
+      clipped: true,
       drawer: false,
       fixed: false,
       items: [{
@@ -90,8 +119,6 @@ export default {
         title: 'Inspire'
       }],
       miniVariant: false,
-      right: true,
-      rightDrawer: false,
       title: 'v. Narcisa',
       links: ['Home', 'About Us', 'Contact Us']
     }
@@ -116,8 +143,8 @@ export default {
       return Math.floor(this.totalParticipari * 100 / this.totalEvents)
     },
     color () {
-      if (this.value < 25) return 'red'
-      if (this.value < 50) return 'green'
+      if (this.value < 30) return 'red'
+      if (this.value < 60) return 'green'
       if (this.value < 80) return 'blue'
       return 'yellow'
     },
