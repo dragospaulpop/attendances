@@ -4,11 +4,10 @@
        <v-flex xs6>
         <v-btn color="primary" @click="addPicture" :value = "pictureSelect">Select profile pic</v-btn>
         <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
-
-        <!-- <v-btn color="primary" @click="touploadPicture">Update profile pic</v-btn> -->
        </v-flex>
        <v-flex xs6>
-        <img :src="imageUrl" height="150">
+        <!-- <img :src="imageUrl" height="150"> -->
+        <img :src="getuserdetails.image" height="150">
        </v-flex>
        <v-flex xs6>
         <v-text-field
@@ -120,6 +119,9 @@ export default {
       return userdet
     }
   },
+  created () {
+    return this.$store.getters.userdetails
+  },
   methods: {
     savenewdetails () {
       const nume = document.getElementById('nume').value
@@ -151,22 +153,22 @@ export default {
       fileReader.readAsDataURL(selectedFile)
       this.imageUrl = selectedFile
       const storageRef = firebase.storage().ref('/users/' + filesName)
+      console.log(storageRef)
       const uploadTask = storageRef.put(selectedFile)
-      // push in storage
-      uploadTask.on('state_changed', function (snapshot) {
+      uploadTask.on('state_changed', snapshot => {
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         console.log('Upload is ' + progress + '% done')
-      }, function (error) {
+      }, error => {
         console.log(error)
-      }, function () {
+      }, () => {
         console.log('succes')
         var downloadURL = uploadTask.snapshot.downloadURL
         console.log('Done. Enjoy', downloadURL)
+        this.image = downloadURL
+        firebase.database().ref('/users/' + this.user.uid).update({
+          image: downloadURL
+        })
       })
-      // push in database
-      // firebase.database().ref('/users/' + this.user.uid + '/image/').push({
-      //   image: this.downloadURL
-      // })
     }
   }
 }

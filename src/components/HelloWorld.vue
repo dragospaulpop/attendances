@@ -292,6 +292,7 @@
         const distanta = (Math.sqrt(Math.pow((+this.coords.lat - 44.4336509), 2) + Math.pow((+this.coords.long - 26.0772394), 2)) * 100 * 1000)
         if (+distanta > 100) {
           this.$store.dispatch('Going', index)
+          this.$store.dispatch('setPrezenti', index)
         }
       }
     },

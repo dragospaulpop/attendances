@@ -195,6 +195,12 @@ export default new Vuex.Store({
         .set({
           text: true
         })
+    },
+    setPrezenti ({state}, payload) {
+      return firebase.database().ref('/events/' + this.state.keysEvents[payload])
+        .update({
+          prezenti: +this.state.events[payload].prezenti + 1
+        })
     }
   },
   getters: {
