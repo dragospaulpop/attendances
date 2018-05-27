@@ -8,6 +8,7 @@ import Admin from '@/components/Admin'
 import Profile from '@/components/Profile'
 import createMeetup from '@/components/createMeetup'
 import AuthGuard from './authGuard'
+import Statistics from '@/components/Statistics'
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/statistics',
+      name: 'Statistics',
+      component: Statistics
     },
     {
       path: '/signup',

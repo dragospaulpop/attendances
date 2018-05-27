@@ -43,6 +43,13 @@
         <v-list-tile-title>Account info</v-list-tile-title>
       </v-list-tile>
       </v-flex>
+      <v-list-tile router to = "/statistics">
+        <v-list-tile-action>
+          <v-icon>account_circle</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title>Statistics</v-list-tile-title>
+      </v-list-tile>
+      </v-flex>
       <v-flex xs12> 
       <v-list-tile  @click="onSignOut">
         <v-list-tile-action>
