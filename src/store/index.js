@@ -75,6 +75,7 @@ export default new Vuex.Store({
             eventdetails.prezenta = myObj[key].prezenta
             eventdetails.titlu = myObj[key].titlu
             eventdetails.data = new Date(myObj[key].data)
+            eventdetails.prezenti = myObj[key].prezenti
             commit('getEvents', eventdetails)
           })
           commit('getKeys', keys)

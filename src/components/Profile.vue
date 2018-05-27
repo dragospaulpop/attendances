@@ -6,7 +6,6 @@
         <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
        </v-flex>
        <v-flex xs6>
-        <!-- <img :src="imageUrl" height="150"> -->
         <img :src="getuserdetails.image" height="150">
        </v-flex>
        <v-flex xs6>

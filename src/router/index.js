@@ -6,6 +6,7 @@ import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Admin from '@/components/Admin'
 import Profile from '@/components/Profile'
+import Statistics from '@/components/Statistics'
 import createMeetup from '@/components/createMeetup'
 import AuthGuard from './authGuard'
 
@@ -33,6 +34,11 @@ export default new Router({
       path: '/admin',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/statistics',
+      name: 'Statistics',
+      component: Statistics
     },
     {
       path: '/profile',
