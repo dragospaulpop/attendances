@@ -1,6 +1,5 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm6 offset-sm3>
+  <v-container fluid>
       <v-card>
         <v-card-media src="https://picsum.photos/200/250/?random" height="200px">
         </v-card-media>
@@ -10,10 +9,22 @@
         <v-card-title secondary-title>
           <p> {{ this.events[id].descriere }} </p>
         </v-card-title>
+        <v-card-text>
+        <v-flex xs12>
+          <v-card>
+            <div id="piechart_3d"></div>
+          </v-card>
+        </v-flex>
+        </v-card-text>
         <v-list-tile v-for="(comment,index) in comments" :key="index">
           <v-list-tile-title>
             {{comment}}
           </v-list-tile-title>
+          <v-list-tile-action v-if="admin === true">
+            <v-icon @click="deleteComment(index)" style="cursor:pointer">
+              delete
+            </v-icon>
+          </v-list-tile-action>
          </v-list-tile>
         <v-btn color="primary" @click="comment()">Add a comment</v-btn>
         <v-flex xs8 id="input">
@@ -29,8 +40,7 @@
           <v-btn flat color="primary" router to = "/">Back</v-btn>
         </v-card-actions>
       </v-card>
-    </v-flex>
-  </v-layout>
+  </v-container>
 </template>
 
 <style scoped>
@@ -54,26 +64,56 @@ a, ul, li {
         comments: []
       }
     },
+    created () {
+      return firebase.database().ref('/events/' + this.keysEvents[this.id])
+        .on('value', snap => {
+          try {
+            this.comments = []
+            const myObj = snap.val()
+            const keys = Object.keys(snap.val().comments)
+            keys.forEach(key => {
+              this.comments.push(myObj.comments[key].comment)
+            })
+          } catch (e) {
+            //
+          }
+        }, function (error) {
+          console.log('Error: ' + error.message)
+        })
+    },
     computed: {
       events () {
         return this.$store.getters.events
       },
       keysEvents () {
         return this.$store.getters.keysEvents
+      },
+      userdetails () {
+        return this.$store.getters.userdetails
+      },
+      admin () {
+        return this.$store.getters.admin
+      },
+      eventComments () {
+        return firebase.database().ref('/events/' + this.keysEvents[this.id])
+          .on('value', snap => {
+            try {
+              this.comments = []
+              const myObj = snap.val()
+              const keys = Object.keys(snap.val().comments)
+              keys.forEach(key => {
+                this.comments.push(myObj.comments[key].comment)
+              })
+            } catch (e) {
+              //
+            }
+          }, function (error) {
+            console.log('Error: ' + error.message)
+          })
       }
     },
-    created: function () {
-      return firebase.database().ref('/events/' + this.keysEvents[this.id] + '/comments/')
-        .on('value', snap => {
-          this.comments = []
-          const myObj = snap.val()
-          const keys = Object.keys(snap.val())
-          keys.forEach(key => {
-            this.comments.push(myObj[key].comment)
-          })
-        }, function (error) {
-          console.log('Error: ' + error.message)
-        })
+    mounted () {
+      this.chart1()
     },
     methods: {
       comment () {
@@ -91,6 +131,24 @@ a, ul, li {
             comment: document.getElementById('textInput').value
           })
         document.getElementById('input').style.display = 'none'
+      },
+      chart1 () {
+        window.google.charts.load('current', {packages: ['corechart']})
+        window.google.charts.setOnLoadCallback(() => {
+          var data = window.google.visualization.arrayToDataTable([
+            ['Meeting', 'Percent'],
+            ['Going', this.events[this.id].prezenti],
+            ['Not going', this.userdetails.length - this.events[this.id].prezenti]
+          ])
+          var options = {
+            is3D: true
+          }
+          var chart = new window.google.visualization.PieChart(document.getElementById('piechart_3d'))
+          chart.draw(data, options)
+        })
+      },
+      deleteComment (index) {
+        this.$store.dispatch('deleteComment', {index: index, idevent: this.id})
       }
     }
   }

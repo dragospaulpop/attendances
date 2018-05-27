@@ -10,7 +10,7 @@
       fixed
       app
     >
-      <div id="text">
+      <div id="text" v-if="admin === false">
         <h1>Welcome</h1>
         <v-flex xs12>
           <v-progress-circular
@@ -43,7 +43,8 @@
         <v-list-tile-title>Account info</v-list-tile-title>
       </v-list-tile>
       </v-flex>
-      <v-list-tile router to = "/statistics">
+      <v-flex>
+      <v-list-tile router to = "/statistics" v-if="admin === true">
         <v-list-tile-action>
           <v-icon>account_circle</v-icon>
         </v-list-tile-action>
@@ -105,7 +106,6 @@
 a, ul, li {
   text-decoration: none;
   list-style-type: none;
-
 }
 #text {
   margin: 0;
@@ -139,6 +139,9 @@ export default {
   computed: {
     events () {
       return this.$store.getters.events
+    },
+    admin () {
+      return this.$store.getters.admin
     },
     totalEvents () {
       return this.$store.getters.events.length

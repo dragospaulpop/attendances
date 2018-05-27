@@ -2,39 +2,64 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-left>
-        <div id="piechart_3d" style="width: 900px; height: 300px;"></div>
-        <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
+        <v-flex xs12>
+          <v-card>
+            <div id="columnchart_values"></div>
+          </v-card>
+        </v-flex>
         <v-card>
           <v-card-title>
-           All users
+          All users
           </v-card-title>
-            <v-list-tile v-for="(userdetails,index) in userdetails" :key="index">
-              <v-list-tile-title>
-                {{userdetails.nume}}
-                {{userdetails.prenume}}
-              </v-list-tile-title>
-            </v-list-tile>
+          <v-card-text>
+          <v-data-table
+          :headers="headers"
+          :items="users"
+          hide-actions
+          class="elevation-1">
+          <template slot="items" slot-scope="props">
+            <td class="text-xs-left">{{ props.item.nume }}</td>
+            <td class="text-xs-left">{{ props.item.prenume }}</td>
+          </template>
+        </v-data-table>
+          </v-card-text>
         </v-card>
+
         <v-card>
           <v-card-title>
+            <v-btn color="primary" to="/createMeetup">
+              Add meeting
+            </v-btn>
             All meetings
           </v-card-title>
-        <v-list two-line>
-          <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
-            <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-            <v-list-tile-avatar>
-              <img :src="event.avatar">
-            </v-list-tile-avatar>
-            </router-link>
-            <v-list-tile-content>
-              <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-              <v-list-tile-title>
-                {{event.titlu}}
-              </v-list-tile-title>
-              </router-link>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+          <v-card-text>
+            <v-list two-line>
+              <v-list-tile avatar v-for="(event,index) in events" :key="index">
+                <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                <v-list-tile-avatar>
+                  <img :src="event.avatar">
+                </v-list-tile-avatar>
+                </router-link>
+                <v-list-tile-content>
+                  <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                  <v-list-tile-title>
+                    {{event.titlu}}
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title v-html="event.descriere">
+                  </v-list-tile-sub-title>
+                  </router-link>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-list-tile-action-text>
+                    {{event.data | filtru}}
+                  </v-list-tile-action-text>
+                <v-icon @click="deleteEvent(index)" style="cursor:pointer">
+                  delete
+                </v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+            </v-list>
+          </v-card-text>
         </v-card>
       </v-layout>
     </v-slide-y-transition>
@@ -56,7 +81,18 @@
           an: null,
           luna: null
         },
-        eventsAll: []
+        eventsAll: [],
+        headers: [
+          {
+            text: 'Name',
+            value: 'name'
+          },
+          {
+            text: 'Surname',
+            value: 'surname'
+          }
+        ],
+        users: []
       }
     },
     computed: {
@@ -101,9 +137,9 @@
       }
     },
     mounted () {
-      this.chart1()
       this.chart2()
       this.readEvents()
+      this.users = this.$store.getters.userdetails
     },
     methods: {
       readEvents () {
@@ -128,32 +164,11 @@
             console.log('Error: ' + error.message)
           })
       },
-      chart1 () {
-        window.google.charts.load('current', {packages: ['corechart']})
-        window.google.charts.setOnLoadCallback(drawChart)
-        function drawChart () {
-          var data = window.google.visualization.arrayToDataTable([
-            ['Meeting', 'Percent'],
-            ['Work', 11],
-            ['Eat', 2],
-            ['Commute', 2],
-            ['Watch TV', 2],
-            ['Sleep', 7]
-          ])
-          var options = {
-            title: 'Attendance % for each meeting',
-            is3D: true
-          }
-          var chart = new window.google.visualization.PieChart(document.getElementById('piechart_3d'))
-          chart.draw(data, options)
-        }
-      },
       chart2 () {
         var x = [[ 'Meeting', 'Attending', { role: 'style' } ]]
         for (var i = 0; i < this.events.length; i++) {
           x.push([this.events[i].titlu, this.events[i].prezenti, 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')'])
         }
-        console.log(x)
         window.google.charts.load('current', {packages: ['corechart']})
         window.google.charts.setOnLoadCallback(() => {
           var view = new window.google.visualization.DataView(
@@ -166,12 +181,18 @@
             2])
           var chart = new window.google.visualization.ColumnChart(document.getElementById('columnchart_values'))
           chart.draw(view, {
-            title: 'Meetings with most attendances',
-            width: 600,
-            height: 400,
+            title: 'Meetings attendances',
             bar: {groupWidth: '95%'},
             legend: { position: 'none' }})
         })
+      },
+      deleteEvent (index) {
+        this.$store.dispatch('deleteEvent', index)
+      }
+    },
+    filters: {
+      filtru (date) {
+        return moment(date).fromNow()
       }
     }
   }
