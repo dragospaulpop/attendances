@@ -89,7 +89,8 @@
             descriere: this.descriere,
             data: this.dateevent,
             prezenta: false,
-            comments: ''
+            comments: '',
+            prezenti: 0
           })
       }
     }
