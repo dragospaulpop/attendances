@@ -52,6 +52,7 @@
   export default {
     data () {
       return {
+        eventsAll: [],
         filter: {
           an: null,
           luna: null
@@ -102,8 +103,31 @@
     mounted () {
       this.chart1()
       this.chart2()
+      this.readEvents()
     },
     methods: {
+      readEvents () {
+        return firebase.database().ref('events')
+          .on('value', snap => {
+            var all = []
+            const myObj = snap.val()
+            const keys = Object.keys(snap.val())
+            keys.forEach(key => {
+              var eventdetails = {}
+              eventdetails.avatar = myObj[key].avatar
+              eventdetails.descriere = myObj[key].descriere
+              eventdetails.id = myObj[key].id
+              eventdetails.prezenta = myObj[key].prezenta
+              eventdetails.titlu = myObj[key].titlu
+              eventdetails.data = new Date(myObj[key].data)
+              eventdetails.prezenti = myObj[key].prezenti
+              all.push(eventdetails)
+            })
+            this.eventsAll = all
+          }, function (error) {
+            console.log('Error: ' + error.message)
+          })
+      },
       chart1 () {
         window.google.charts.load('current', {packages: ['corechart']})
         window.google.charts.setOnLoadCallback(drawChart)
@@ -125,33 +149,29 @@
         }
       },
       chart2 () {
+        var x = [[ 'Meeting', 'Attending', { role: 'style' } ]]
+        for (var i = 0; i < this.events.length; i++) {
+          x.push([this.events[i].titlu, this.events[i].prezenti, 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')'])
+        }
+        console.log(x)
         window.google.charts.load('current', {packages: ['corechart']})
-        window.google.charts.setOnLoadCallback(drawChart)
-        function drawChart () {
-          var data = window.google.visualization.arrayToDataTable([
-            [ 'Meeting', 'Attending', { role: 'style' } ],
-            ['Meeting4', 2, 'purple'],
-            ['Meeting1', 1, 'pink'],
-            ['Meeting2', 1, 'yellow'],
-            ['Meeting3', 0.5, 'grey']
-          ])
-          var view = new window.google.visualization.DataView(data)
+        window.google.charts.setOnLoadCallback(() => {
+          var view = new window.google.visualization.DataView(
+            window.google.visualization.arrayToDataTable(x))
           view.setColumns([0, 1,
             { calc: 'stringify',
               sourceColumn: 1,
               type: 'string',
               role: 'annotation' },
             2])
-          var options = {
+          var chart = new window.google.visualization.ColumnChart(document.getElementById('columnchart_values'))
+          chart.draw(view, {
             title: 'Meetings with most attendances',
             width: 600,
             height: 400,
             bar: {groupWidth: '95%'},
-            legend: { position: 'none' }
-          }
-          var chart = new window.google.visualization.ColumnChart(document.getElementById('columnchart_values'))
-          chart.draw(view, options)
-        }
+            legend: { position: 'none' }})
+        })
       }
     }
   }
