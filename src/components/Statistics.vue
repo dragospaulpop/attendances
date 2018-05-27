@@ -61,6 +61,32 @@
             </v-list>
           </v-card-text>
         </v-card>
+
+        <!-- RAPORT: Top locații utilizatori -->
+        <v-flex xs4>
+          <v-card>
+            <v-card-title>
+              <v-icon color="primary"> location_city
+              </v-icon>
+              Top meetings
+            </v-card-title>
+            <v-card-text>
+              <v-card>
+                <v-list>
+                  <v-list-tile v-for="(item, index) in topMeetings" :key="index">
+                    <v-list-tile-action>
+                      <v-icon v-if="index === 0" color="primary">star</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title v-text="item"></v-list-tile-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-card>
+            </v-card-text>
+           </v-card>
+        </v-flex>
+
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -92,7 +118,8 @@
             value: 'surname'
           }
         ],
-        users: []
+        users: [],
+        topMeetings: []
       }
     },
     computed: {
@@ -140,6 +167,7 @@
       this.chart2()
       this.readEvents()
       this.users = this.$store.getters.userdetails
+      this.topEvents()
     },
     methods: {
       readEvents () {
@@ -188,6 +216,45 @@
       },
       deleteEvent (index) {
         this.$store.dispatch('deleteEvent', index)
+      },
+      topEvents () {
+        return firebase.database().ref('events')
+          .on('value', snap => {
+            var allEvents = []
+            const myObj = snap.val()
+            const keysEvents = Object.keys(snap.val())
+            keysEvents.forEach(key => {
+              allEvents.push(myObj[key].prezenti)
+            })
+            for (var j = 0; j < 3; j++) {
+              if (allEvents.length === 0) {
+                console.log('e gol')
+              }
+              var modeMap = {}
+              var maxEl = allEvents[0]
+              var maxCount = 1
+              for (var i = 0; i < allEvents.length; i++) {
+                var el = allEvents[i]
+                if (modeMap[el] === null) {
+                  modeMap[el] = 1
+                } else {
+                  modeMap[el]++
+                }
+                if (modeMap[el] > maxCount) {
+                  maxEl = el
+                  maxCount = modeMap[el]
+                }
+              }
+              for (var k = 0; k < allEvents.length; k++) {
+                if (maxEl === allEvents[k]) {
+                  allEvents.splice(k, 1)
+                }
+              }
+              this.topMeetings.push(maxEl)
+            }
+          }, error => {
+            console.log('Error: ' + error.message)
+          })
       }
     },
     filters: {
