@@ -2,7 +2,6 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-left>
-        <div id="piechart_3d" style="width: 900px; height: 300px;"></div>
         <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
         <v-card>
           <v-card-title>
@@ -101,7 +100,6 @@
       }
     },
     mounted () {
-      this.chart1()
       this.chart2()
       this.readEvents()
     },
@@ -127,26 +125,6 @@
           }, function (error) {
             console.log('Error: ' + error.message)
           })
-      },
-      chart1 () {
-        window.google.charts.load('current', {packages: ['corechart']})
-        window.google.charts.setOnLoadCallback(drawChart)
-        function drawChart () {
-          var data = window.google.visualization.arrayToDataTable([
-            ['Meeting', 'Percent'],
-            ['Work', 11],
-            ['Eat', 2],
-            ['Commute', 2],
-            ['Watch TV', 2],
-            ['Sleep', 7]
-          ])
-          var options = {
-            title: 'Attendance % for each meeting',
-            is3D: true
-          }
-          var chart = new window.google.visualization.PieChart(document.getElementById('piechart_3d'))
-          chart.draw(data, options)
-        }
       },
       chart2 () {
         var x = [[ 'Meeting', 'Attending', { role: 'style' } ]]

@@ -10,6 +10,11 @@
         <v-card-title secondary-title>
           <p> {{ this.events[id].descriere }} </p>
         </v-card-title>
+        <v-flex xs12>
+            <v-card>
+              <div id="piechart_3d"></div>
+            </v-card>
+          </v-flex>
         <v-list-tile v-for="(comment,index) in comments" :key="index">
           <v-list-tile-title>
             {{comment}}
@@ -58,9 +63,15 @@ a, ul, li {
       events () {
         return this.$store.getters.events
       },
+      userdetails () {
+        return this.$store.getters.userdetails
+      },
       keysEvents () {
         return this.$store.getters.keysEvents
       }
+    },
+    mounted () {
+      this.chart1()
     },
     created: function () {
       return firebase.database().ref('/events/' + this.keysEvents[this.id] + '/comments/')
@@ -79,6 +90,26 @@ a, ul, li {
       comment () {
         document.getElementById('input').style.display = 'inline'
         this.commentAdd = true
+      },
+      chart1 () {
+        window.google.charts.load('current', {packages: ['corechart']})
+        window.google.charts.setOnLoadCallback(drawChart)
+        function drawChart () {
+          var data = window.google.visualization.arrayToDataTable([
+            ['Meeting', 'Percent'],
+            ['Work', 11],
+            ['Eat', 2],
+            ['Commute', 2],
+            ['Watch TV', 2],
+            ['Sleep', 7]
+          ])
+          var options = {
+            title: 'Attendance % for each meeting',
+            is3D: true
+          }
+          var chart = new window.google.visualization.PieChart(document.getElementById('piechart_3d'))
+          chart.draw(data, options)
+        }
       },
       cancelComment () {
         document.getElementById('input').style.display = 'none'
