@@ -10,6 +10,7 @@
           <p> {{ this.events[id].descriere }} </p>
         </v-card-title>
         <v-card-text>
+        <v-btn color="primary" @click="participanti = true">Who's going</v-btn>
         <v-flex xs12>
           <v-card>
             <div id="piechart_3d"></div>
@@ -40,6 +41,17 @@
           <v-btn flat color="primary" router to = "/">Back</v-btn>
         </v-card-actions>
       </v-card>
+
+      <v-dialog v-model="participanti" max-width="480">
+        <v-card>
+          <v-list-tile v-for="(comment,index) in comments" :key="index">
+            <v-list-tile-title>
+              {{comment}}
+            </v-list-tile-title>
+          </v-list-tile>
+        </v-card>
+      </v-dialog>
+
   </v-container>
 </template>
 
@@ -61,7 +73,9 @@ a, ul, li {
       return {
         id: this.$route.params.id,
         commentAdd: false,
-        comments: []
+        comments: [],
+        participanti: false,
+        usersGoing: []
       }
     },
     created () {
@@ -114,6 +128,7 @@ a, ul, li {
     },
     mounted () {
       this.chart1()
+      this.users()
     },
     methods: {
       comment () {
@@ -149,6 +164,18 @@ a, ul, li {
       },
       deleteComment (index) {
         this.$store.dispatch('deleteComment', {index: index, idevent: this.id})
+      },
+      users () {
+        return firebase.database().ref('users')
+          .on('value', snap => {
+            const myObj = snap.val()
+            const keys = Object.keys(snap.val())
+            keys.forEach(key => {
+              console.log(Object.keys(myObj[key].participari))
+            })
+          }, function (error) {
+            console.log('Error: ' + error.message)
+          })
       }
     }
   }

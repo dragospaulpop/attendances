@@ -62,11 +62,11 @@
           </v-card-text>
         </v-card>
 
-        <!-- RAPORT: Top locații utilizatori -->
+        <!-- RAPORT: Top meetings -->
         <v-flex xs4>
           <v-card>
             <v-card-title>
-              <v-icon color="primary"> location_city
+              <v-icon color="primary"> meeting_room
               </v-icon>
               Top meetings
             </v-card-title>
@@ -78,7 +78,9 @@
                       <v-icon v-if="index === 0" color="primary">star</v-icon>
                     </v-list-tile-action>
                     <v-list-tile-content>
-                      <v-list-tile-title v-text="item"></v-list-tile-title>
+                      <router-link :to="{ name: 'Events', params: { id: ev.indexOf(topMeetings[index]) }}" tag="li" style="cursor:pointer">
+                        <v-list-tile-title v-text="item"></v-list-tile-title>
+                      </router-link>
                     </v-list-tile-content>
                   </v-list-tile>
                 </v-list>
@@ -119,7 +121,8 @@
           }
         ],
         users: [],
-        topMeetings: []
+        topMeetings: [],
+        ev: []
       }
     },
     computed: {
@@ -180,7 +183,6 @@
               var eventdetails = {}
               eventdetails.avatar = myObj[key].avatar
               eventdetails.descriere = myObj[key].descriere
-              eventdetails.id = myObj[key].id
               eventdetails.prezenta = myObj[key].prezenta
               eventdetails.titlu = myObj[key].titlu
               eventdetails.data = new Date(myObj[key].data)
@@ -220,39 +222,26 @@
       topEvents () {
         return firebase.database().ref('events')
           .on('value', snap => {
-            var allEvents = []
-            const myObj = snap.val()
-            const keysEvents = Object.keys(snap.val())
+            const topSearch = []
+            const numbers = []
+            var myObj = snap.val()
+            var keysEvents = Object.keys(snap.val())
+            this.ev = keysEvents
             keysEvents.forEach(key => {
-              allEvents.push(myObj[key].prezenti)
+              numbers.push(myObj[key].prezenti)
             })
-            for (var j = 0; j < 3; j++) {
-              if (allEvents.length === 0) {
+            for (var i = 0; i < 3; i++) {
+              if (numbers.length === 0) {
                 console.log('e gol')
               }
-              var modeMap = {}
-              var maxEl = allEvents[0]
-              var maxCount = 1
-              for (var i = 0; i < allEvents.length; i++) {
-                var el = allEvents[i]
-                if (modeMap[el] === null) {
-                  modeMap[el] = 1
-                } else {
-                  modeMap[el]++
-                }
-                if (modeMap[el] > maxCount) {
-                  maxEl = el
-                  maxCount = modeMap[el]
-                }
+              if (Math.max(...numbers) !== 0) {
+                var a = numbers.indexOf(Math.max(...numbers))
+                topSearch.push(keysEvents[a])
+                numbers[a] = 0
               }
-              for (var k = 0; k < allEvents.length; k++) {
-                if (maxEl === allEvents[k]) {
-                  allEvents.splice(k, 1)
-                }
-              }
-              this.topMeetings.push(maxEl)
             }
-          }, error => {
+            this.topMeetings = topSearch
+          }, function (error) {
             console.log('Error: ' + error.message)
           })
       }
