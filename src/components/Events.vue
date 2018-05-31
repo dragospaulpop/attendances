@@ -171,7 +171,9 @@ a, ul, li {
             const myObj = snap.val()
             const keys = Object.keys(snap.val())
             keys.forEach(key => {
-              console.log(Object.keys(myObj[key].participari))
+              if (Object.keys(myObj[key].participari).indexOf(this.keysEvents[this.id]) === 0) {
+                this.usersGoing.push('ceva')
+              }
             })
           }, function (error) {
             console.log('Error: ' + error.message)
