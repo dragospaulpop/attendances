@@ -10,7 +10,7 @@
       fixed
       app
     >
-      <div id="text">
+      <div id="text" v-if="admin === false">
         <h1>Welcome</h1>
         <v-flex xs12>
           <v-progress-circular
@@ -23,11 +23,11 @@
             {{ value }} %
           </v-progress-circular>
         </v-flex>
-        <v-flex xs12> 
+        <v-flex xs12>
           {{totalParticipari}} events out of {{totalEvents}}
         </v-flex>
       </div>
-      <v-flex xs12> 
+      <v-flex xs12>
       <v-list-tile router to = "/">
         <v-list-tile-action>
           <v-icon>home</v-icon>
@@ -35,7 +35,7 @@
         <v-list-tile-title>Home</v-list-tile-title>
       </v-list-tile>
       </v-flex>
-      <v-flex xs12> 
+      <v-flex xs12>
       <v-list-tile router to = "/profile">
         <v-list-tile-action>
           <v-icon>account_circle</v-icon>
@@ -43,15 +43,15 @@
         <v-list-tile-title>Account info</v-list-tile-title>
       </v-list-tile>
       </v-flex>
-      <v-flex xs12> 
-      <v-list-tile router to = "/statistics">
+      <v-flex xs12>
+      <v-list-tile router to = "/statistics" v-if="admin === true">
         <v-list-tile-action>
           <v-icon>account_circle</v-icon>
         </v-list-tile-action>
         <v-list-tile-title>Statistics</v-list-tile-title>
       </v-list-tile>
       </v-flex>
-      <v-flex xs12> 
+      <v-flex xs12>
       <v-list-tile  @click="onSignOut">
         <v-list-tile-action>
           <v-icon>settings</v-icon>
@@ -127,7 +127,6 @@ export default {
         title: 'Inspire'
       }],
       miniVariant: false,
-      title: 'v. Narcisa',
       links: ['Home', 'About Us', 'Contact Us']
     }
   },
@@ -140,6 +139,9 @@ export default {
   computed: {
     events () {
       return this.$store.getters.events
+    },
+    admin () {
+      return this.$store.getters.admin
     },
     totalEvents () {
       return this.$store.getters.events.length

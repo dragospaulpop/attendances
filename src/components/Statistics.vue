@@ -2,39 +2,91 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-left>
-        <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
+        <v-flex xs12>
+          <v-card>
+            <div id="columnchart_values"></div>
+          </v-card>
+        </v-flex>
         <v-card>
           <v-card-title>
-           All users
+          All users
           </v-card-title>
-            <v-list-tile v-for="(userdetails,index) in userdetails" :key="index">
-              <v-list-tile-title>
-                {{userdetails.nume}}
-                {{userdetails.prenume}}
-              </v-list-tile-title>
-            </v-list-tile>
+          <v-card-text>
+          <v-data-table
+          :headers="headers"
+          :items="users"
+          hide-actions
+          class="elevation-1">
+          <template slot="items" slot-scope="props">
+            <td class="text-xs-left">{{ props.item.nume }}</td>
+            <td class="text-xs-left">{{ props.item.prenume }}</td>
+          </template>
+        </v-data-table>
+          </v-card-text>
         </v-card>
+
         <v-card>
           <v-card-title>
+            <v-btn color="primary" to="/createMeetup">
+              Add meeting
+            </v-btn>
             All meetings
           </v-card-title>
-        <v-list two-line>
-          <v-list-tile avatar v-for="(event,index) in filterEvents" :key="index">
-            <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-            <v-list-tile-avatar>
-              <img :src="event.avatar">
-            </v-list-tile-avatar>
-            </router-link>
-            <v-list-tile-content>
-              <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-              <v-list-tile-title>
-                {{event.titlu}}
-              </v-list-tile-title>
-              </router-link>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+          <v-card-text>
+            <v-list two-line>
+              <v-list-tile avatar v-for="(event,index) in events" :key="index">
+                <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                <v-list-tile-avatar>
+                  <img :src="event.avatar">
+                </v-list-tile-avatar>
+                </router-link>
+                <v-list-tile-content>
+                  <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                  <v-list-tile-title>
+                    {{event.titlu}}
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title v-html="event.descriere">
+                  </v-list-tile-sub-title>
+                  </router-link>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-list-tile-action-text>
+                    {{event.data | filtru}}
+                  </v-list-tile-action-text>
+                <v-icon @click="deleteEvent(index)" style="cursor:pointer">
+                  delete
+                </v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+            </v-list>
+          </v-card-text>
         </v-card>
+         <!-- RAPORT: Top meetings -->
+        <v-flex xs4>
+          <v-card>
+            <v-card-title>
+              <v-icon color="primary"> meeting_room
+              </v-icon>
+              Top meetings
+            </v-card-title>
+            <v-card-text>
+              <v-card>
+                <v-list>
+                  <v-list-tile v-for="(item, index) in topMeetings" :key="index">
+                    <v-list-tile-action>
+                      <v-icon v-if="index === 0" color="primary">star</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <router-link :to="{ name: 'Events', params: { id: ev.indexOf(topMeetings[index]) }}" tag="li" style="cursor:pointer">
+                        <v-list-tile-title v-text="item"></v-list-tile-title>
+                      </router-link>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-card>
+            </v-card-text>
+           </v-card>
+        </v-flex>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -52,6 +104,19 @@
     data () {
       return {
         eventsAll: [],
+        headers: [
+          {
+            text: 'Name',
+            value: 'name'
+          },
+          {
+            text: 'Surname',
+            value: 'surname'
+          }
+        ],
+        users: [],
+        topMeetings: [],
+        ev: [],
         filter: {
           an: null,
           luna: null
@@ -102,6 +167,8 @@
     mounted () {
       this.chart2()
       this.readEvents()
+      this.users = this.$store.getters.userdetails
+      this.topEvents()
     },
     methods: {
       readEvents () {
@@ -144,12 +211,41 @@
             2])
           var chart = new window.google.visualization.ColumnChart(document.getElementById('columnchart_values'))
           chart.draw(view, {
-            title: 'Meetings with most attendances',
-            width: 600,
-            height: 400,
+            title: 'Meetings attendances',
             bar: {groupWidth: '95%'},
             legend: { position: 'none' }})
         })
+      },
+      topEvents () {
+        return firebase.database().ref('events')
+          .on('value', snap => {
+            const topSearch = []
+            const numbers = []
+            var myObj = snap.val()
+            var keysEvents = Object.keys(snap.val())
+            this.ev = keysEvents
+            keysEvents.forEach(key => {
+              numbers.push(myObj[key].prezenti)
+            })
+            for (var i = 0; i < 3; i++) {
+              if (numbers.length === 0) {
+                console.log('e gol')
+              }
+              if (Math.max(...numbers) !== 0) {
+                var a = numbers.indexOf(Math.max(...numbers))
+                topSearch.push(keysEvents[a])
+                numbers[a] = 0
+              }
+            }
+            this.topMeetings = topSearch
+          }, function (error) {
+            console.log('Error: ' + error.message)
+          })
+      }
+    },
+    filters: {
+      filtru (date) {
+        return moment(date).fromNow()
       }
     }
   }

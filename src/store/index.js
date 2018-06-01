@@ -86,6 +86,20 @@ export default new Vuex.Store({
     deleteEvent ({state}, payload) {
       firebase.database().ref('/events/' + this.state.keysEvents[payload]).remove()
     },
+    deleteComment ({state}, payload) {
+      var comments = []
+      firebase.database().ref('/events/' + this.state.keysEvents[payload.idevent] + '/comments/')
+        .on('value', snap => {
+          try {
+            comments = Object.keys(snap.val())
+          } catch (e) {
+            //
+          }
+        }, function (error) {
+          console.log('Error: ' + error.message)
+        })
+      firebase.database().ref('/events/' + this.state.keysEvents[payload.idevent] + '/comments/' + comments[payload.index]).remove()
+    },
     getUserData ({commit}, payload) {
       return firebase.database().ref('users')
         .on('value', snap => {
@@ -149,6 +163,13 @@ export default new Vuex.Store({
     AuthChange ({commit}) {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
+          firebase.database().ref('users/' + user.uid)
+            .on('value', snap => {
+              const myObj = snap.val()
+              commit('getAdmin', myObj.admin)
+            }, error => {
+              console.log('Error: ' + error.message)
+            })
           commit('setUser', user)
         } else {
           commit('setUser', null)
