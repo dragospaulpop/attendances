@@ -2,8 +2,16 @@
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
       <v-card>
-        <v-card-media src="https://picsum.photos/200/250/?random" height="200px">
-        </v-card-media>
+        <v-carousel style="height:300px">
+          <v-carousel-item
+            v-for="(item,i) in items"
+            :key="i"
+            :src="item.src"
+            transition="fade"
+            reverse-transition="fade"
+          >
+          </v-carousel-item>
+        </v-carousel>
         <v-card-title primary-title>
           <p> {{ this.events[id].titlu }} </p>
         </v-card-title>
@@ -42,9 +50,9 @@
       </v-card>
        <v-dialog v-model="participanti" max-width="480">
         <v-card>
-          <v-list-tile v-for="(comment,index) in comments" :key="index">
+          <v-list-tile v-for="(user, index) in usersGoing" :key="index">
             <v-list-tile-title>
-              {{comment}}
+              {{user}}
             </v-list-tile-title>
           </v-list-tile>
         </v-card>
@@ -61,6 +69,9 @@ a, ul, li {
   text-decoration: none;
   list-style-type: none;
 }
+p {
+  font-weight: bold;
+}
 </style>
 
 <script>
@@ -72,7 +83,22 @@ a, ul, li {
         id: this.$route.params.id,
         commentAdd: false,
         comments: [],
-        participanti: false
+        participanti: false,
+        usersGoing: [],
+        items: [
+          {
+            src: 'http://www.catster.com/wp-content/uploads/2017/08/Pixiebob-cat.jpg'
+          },
+          {
+            src: 'http://www.petwebsite.co.uk/media/k2/items/cache/c1572c59821062c96d0fc33ad32a2983_L.jpg'
+          },
+          {
+            src: 'https://imagesvc.timeincapp.com/v3/mm/image?url=https%3A%2F%2Fpeopledotcom.files.wordpress.com%2F2018%2F02%2Ftwo-tone-cat.jpg%3Fw%3D2000&w=700&q=85'
+          },
+          {
+            src: 'https://www.cats.org.uk/uploads/images/featurebox_sidebar_kids/Cat-Behaviour.jpg'
+          }
+        ]
       }
     },
     computed: {
@@ -87,6 +113,9 @@ a, ul, li {
       },
       keysEvents () {
         return this.$store.getters.keysEvents
+      },
+      keysUsers () {
+        return this.$store.getters.keysUsers
       },
       eventComments () {
         return firebase.database().ref('/events/' + this.keysEvents[this.id])
@@ -165,10 +194,14 @@ a, ul, li {
       users () {
         return firebase.database().ref('users')
           .on('value', snap => {
+            const keyEvent = this.keysEvents[this.id]
             const myObj = snap.val()
             const keys = Object.keys(snap.val())
             keys.forEach(key => {
-              console.log(Object.keys(myObj[key].participari))
+              let participari = Object.keys(myObj[key].participari)
+              if (participari.includes(keyEvent)) {
+                this.usersGoing.push(myObj[key].nume + ' ' + myObj[key].prenume)
+              }
             })
           }, function (error) {
             console.log('Error: ' + error.message)

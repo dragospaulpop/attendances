@@ -146,6 +146,7 @@
    width: 45%;
    height: 400px;
    background-color: grey;
+   display: none;
  }
 </style>
 

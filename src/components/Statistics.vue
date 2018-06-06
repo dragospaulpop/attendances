@@ -4,6 +4,42 @@
       <v-layout column align-left>
         <v-flex xs12>
           <v-card>
+            <v-card-title>
+              All meetings
+            </v-card-title>
+              <v-btn color="primary" to="/createMeetup">
+                Add meeting
+              </v-btn>
+            <v-card-text>
+              <v-list two-line>
+                <v-list-tile avatar v-for="(event,index) in events" :key="index">
+                  <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                  <v-list-tile-avatar>
+                    <img :src="event.avatar">
+                  </v-list-tile-avatar>
+                  </router-link>
+                  <v-list-tile-content>
+                    <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                    <v-list-tile-title>
+                      {{event.titlu}}
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title v-html="event.descriere">
+                    </v-list-tile-sub-title>
+                    </router-link>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-list-tile-action-text>
+                      {{event.data | filtru}}
+                    </v-list-tile-action-text>
+                  <v-icon @click="deleteEvent(index)" style="cursor:pointer">
+                    delete
+                  </v-icon>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </v-list>
+            </v-card-text>
+          </v-card>
+          <v-card>
             <div id="columnchart_values"></div>
           </v-card>
         </v-flex>
@@ -25,42 +61,7 @@
           </v-card-text>
         </v-card>
 
-        <v-card>
-          <v-card-title>
-            <v-btn color="primary" to="/createMeetup">
-              Add meeting
-            </v-btn>
-            All meetings
-          </v-card-title>
-          <v-card-text>
-            <v-list two-line>
-              <v-list-tile avatar v-for="(event,index) in events" :key="index">
-                <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-                <v-list-tile-avatar>
-                  <img :src="event.avatar">
-                </v-list-tile-avatar>
-                </router-link>
-                <v-list-tile-content>
-                  <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-                  <v-list-tile-title>
-                    {{event.titlu}}
-                  </v-list-tile-title>
-                  <v-list-tile-sub-title v-html="event.descriere">
-                  </v-list-tile-sub-title>
-                  </router-link>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-list-tile-action-text>
-                    {{event.data | filtru}}
-                  </v-list-tile-action-text>
-                <v-icon @click="deleteEvent(index)" style="cursor:pointer">
-                  delete
-                </v-icon>
-                </v-list-tile-action>
-              </v-list-tile>
-            </v-list>
-          </v-card-text>
-        </v-card>
+
          <!-- RAPORT: Top meetings -->
         <v-flex xs4>
           <v-card>
@@ -215,6 +216,9 @@
             bar: {groupWidth: '95%'},
             legend: { position: 'none' }})
         })
+      },
+      deleteEvent (index) {
+        this.$store.dispatch('deleteEvent', index)
       },
       topEvents () {
         return firebase.database().ref('events')
