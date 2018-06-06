@@ -44,9 +44,9 @@
 
       <v-dialog v-model="participanti" max-width="480">
         <v-card>
-          <v-list-tile v-for="(comment,index) in comments" :key="index">
+          <v-list-tile v-for="(user,index) in usersGoing" :key="index">
             <v-list-tile-title>
-              {{comment}}
+              {{user}}
             </v-list-tile-title>
           </v-list-tile>
         </v-card>
@@ -171,8 +171,8 @@ a, ul, li {
             const myObj = snap.val()
             const keys = Object.keys(snap.val())
             keys.forEach(key => {
-              if (Object.keys(myObj[key].participari).indexOf(this.keysEvents[this.id]) === 0) {
-                this.usersGoing.push('ceva')
+              if (Object.keys(myObj[key].participari).indexOf(this.keysEvents[this.id]) !== -1) {
+                this.usersGoing.push(myObj[key].nume + ' ' + myObj[key].prenume)
               }
             })
           }, function (error) {
