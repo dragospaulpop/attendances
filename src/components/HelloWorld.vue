@@ -4,7 +4,7 @@
       <v-layout column align-center>
         <v-list two-line>
           <v-menu offset-y>
-            <v-btn color="primary" dark slot="activator">
+            <v-btn flat color="primary" dark slot="activator">
               Month
             </v-btn>
             <v-list>
@@ -29,7 +29,7 @@
             </v-list>
           </v-menu>
           <v-menu offset-y>
-            <v-btn color="primary" dark slot="activator">
+            <v-btn flat  color="primary" dark slot="activator">
               Year
             </v-btn>
             <v-list>
@@ -53,7 +53,7 @@
               </v-list-tile>
             </v-list>
           </v-menu> 
-          <v-btn color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
+          <v-btn flat color="primary" @click = "filter.luna = null, filter.an = null, date = null, date1 = null">
               Reset
           </v-btn>
           <v-flex xs12> 
@@ -122,7 +122,7 @@
               </router-link>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-btn @click="addGoing(index)" v-if="areyougoing.indexOf(index) === -1">
+              <v-btn color="primary" @click="addGoing(index)" v-if="areyougoing.indexOf(index) === -1">
                 Attend
               </v-btn>
               <v-btn disabled v-else>

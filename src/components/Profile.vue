@@ -1,76 +1,105 @@
  <template>
-   <v-container fluid grid-list-xl>
-     <v-layout wrap>
-       <v-flex xs6>
-        <v-btn color="primary" @click="addPicture" :value = "pictureSelect">Select profile pic</v-btn>
-        <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
-       </v-flex>
-       <v-flex xs6>
-        <img :src="getuserdetails.image" height="150">
-       </v-flex>
-       <v-flex xs6>
-        <v-text-field
-          name="nume"
-          label="Last name"
-          :value = getuserdetails.nume
-          id="nume"
-        ></v-text-field>
-        <v-spacer></v-spacer>
-      </v-flex>
-      <v-flex xs6>
-        <v-text-field
-          name="prenume"
-          label="First name"
-          :value = getuserdetails.prenume
-          id="prenume"
-        ></v-text-field>
-      </v-flex>
-       <v-flex xs6>
-        <v-text-field
-          name="parolaactuala"
-          label="Current password"
-          hint="Minim 8 caractere"
-          v-model="oldpass"
-          min="8"
-          :type="e1 ? 'password' : 'text'"
-          id = "oldpsw"
-          required
-        >
-        </v-text-field>
-       </v-flex>
-       <v-flex xs6>
-         <v-text-field
-             label="New password"
-             name="parolanoua"
-             hint="Minim 8 caractere"
-             v-model="password"
-             min="8"
-             :append-icon-cb="() => (e1 = !e1)"
-             :type="e1 ? 'password' : 'text'"
-             counter
-           >
-           </v-text-field>
-         </v-flex>
-         <v-flex xs6>
-           <v-text-field
-             name="parolanouaconfirm"
-             label="Confirm new password"
-             hint="Minim 8 caractere"
-             v-model="confirmPassword"
-             min="8"
-             :type="e1 ? 'password' : 'text'"
-             :rules="[comparePasswords]"
-             id = "newpsw"
-           >
-         </v-text-field>
-       </v-flex>
-       <v-flex xs12>
-        <v-btn @click="savenewdetails">Salveaza datele</v-btn>
-        <v-btn flat color="primary" router to = "/">Back</v-btn>
-       </v-flex>
-    </v-layout>
+   <v-container align-center>
+     <h1>Account informations</h1>
+      <v-layout row align-content-right>
+          <v-flex d-flex xs12 sm6 md3>
+          <v-layout row wrap>
+            <v-flex d-flex>
+              <v-card>
+                <v-card-text>
+                  <v-text-field
+                    name="nume"
+                    label="Last name"
+                    :value = getuserdetails.nume
+                    id="nume"
+                  ></v-text-field>
+                  <v-spacer></v-spacer>
+                  <v-text-field
+                    name="prenume"
+                    label="First name"
+                    :value = getuserdetails.prenume
+                    id="prenume"
+                  ></v-text-field>
+                  <v-text-field
+                    name="parolaactuala"
+                    label="Current password"
+                    hint="Minim 8 caractere"
+                    v-model="oldpass"
+                    min="8"
+                    :type="e1 ? 'password' : 'text'"
+                    id = "oldpsw"
+                    required
+                  >
+                  </v-text-field>
+                  <v-text-field
+                      label="New password"
+                      name="parolanoua"
+                      hint="Minim 8 caractere"
+                      v-model="password"
+                      min="8"
+                      :append-icon-cb="() => (e1 = !e1)"
+                      :type="e1 ? 'password' : 'text'"
+                      counter
+                    >
+                    </v-text-field>
+                    <v-text-field
+                      name="parolanouaconfirm"
+                      label="Confirm new password"
+                      hint="Minim 8 caractere"
+                      v-model="confirmPassword"
+                      min="8"
+                      :type="e1 ? 'password' : 'text'"
+                      :rules="[comparePasswords]"
+                      id = "newpsw"
+                    >
+                  </v-text-field>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+            <v-flex d-flex>
+              <v-layout row wrap>
+                <v-flex d-flex xs12>
+                  <v-card>
+                    <v-card-text>
+                      <v-btn @click="savenewdetails">Salveaza datele</v-btn>
+                      <v-btn flat color="primary" router to = "/">Back</v-btn>
+                    </v-card-text>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+                </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+      <v-layout row>
+       <v-flex d-flex xs12 sm6 md2 child-flex>
+          <v-card height="200">
+            <img :src="getuserdetails.image" height="200">
+            <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
+            <v-btn
+            :loading="loading3"
+            :disabled="loading3"
+            color="blue-grey"
+            class="white--text"
+            @click.native="loader = 'loading3'"
+            @click="addPicture"
+            :value = "pictureSelect"
+          >
+            Select profile pic
+            <v-icon right dark>cloud_upload</v-icon>
+          </v-btn>
+          </v-card>
+        </v-flex>
+      </v-layout>
    </v-container>
  </template>
+
+<style>
+img {
+  margin: 0;
+  padding: 0;
+}
+</style>
 
 <script>
 import firebase from '@/firebase'
@@ -88,6 +117,7 @@ export default {
       image: null,
       selectedFile: null,
       downloadURL: null,
+      loading3: false,
       rules: {
         email: (value) => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

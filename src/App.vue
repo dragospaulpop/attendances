@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
-      v-show="userIsAuthenticated" 
+      v-show="userIsAuthenticated"
       persistent
       :mini-variant="miniVariant"
       :clipped="clipped"
