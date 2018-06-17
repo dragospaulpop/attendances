@@ -1,10 +1,27 @@
  <template>
-   <v-container align-center>
-     <h1>Account informations</h1>
-      <v-layout row align-content-right>
-          <v-flex d-flex xs12 sm6 md3>
-          <v-layout row wrap>
-            <v-flex d-flex>
+   <v-container>
+      <v-layout justify-center>
+        <v-flex xs6>
+          <img :src="getuserdetails.image" height="200" v-if="getuserdetails.image !== ''">
+          <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
+          <v-btn id="imagine"
+          :loading="loading3"
+          :disabled="loading3"
+          color="blue-grey"
+          class="white--text"
+          @click.native="loader = 'loading3'"
+          @click="addPicture"
+          :value = "pictureSelect"
+          >
+            Select profile pic
+            <v-icon right dark>cloud_upload</v-icon>
+          </v-btn>
+        </v-flex>
+      </v-layout>
+      <v-layout justify-center>
+          <v-flex xs6>
+          <v-layout>
+            <v-flex>
               <v-card>
                 <v-card-text>
                   <v-text-field
@@ -53,42 +70,12 @@
                       id = "newpsw"
                     >
                   </v-text-field>
+                  <v-btn color="primary" @click="savenewdetails">Salveaza datele</v-btn>
+                  <v-btn flat color="primary" router to = "/">Back</v-btn>
                 </v-card-text>
               </v-card>
             </v-flex>
-            <v-flex d-flex>
-              <v-layout row wrap>
-                <v-flex d-flex xs12>
-                  <v-card>
-                    <v-card-text>
-                      <v-btn @click="savenewdetails">Salveaza datele</v-btn>
-                      <v-btn flat color="primary" router to = "/">Back</v-btn>
-                    </v-card-text>
-                  </v-card>
-                </v-flex>
-              </v-layout>
-                </v-flex>
           </v-layout>
-        </v-flex>
-      </v-layout>
-      <v-layout row>
-       <v-flex d-flex xs12 sm6 md2 child-flex>
-          <v-card height="200">
-            <img :src="getuserdetails.image" height="200">
-            <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
-            <v-btn
-            :loading="loading3"
-            :disabled="loading3"
-            color="blue-grey"
-            class="white--text"
-            @click.native="loader = 'loading3'"
-            @click="addPicture"
-            :value = "pictureSelect"
-          >
-            Select profile pic
-            <v-icon right dark>cloud_upload</v-icon>
-          </v-btn>
-          </v-card>
         </v-flex>
       </v-layout>
    </v-container>
@@ -98,6 +85,9 @@
 img {
   margin: 0;
   padding: 0;
+}
+#imagine {
+  display: block;
 }
 </style>
 

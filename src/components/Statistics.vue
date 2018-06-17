@@ -1,17 +1,14 @@
 <template>
-  <v-container fluid>
-    <v-slide-y-transition mode="out-in">
-      <v-layout column align-left>
-        <v-flex xs12>
-          <v-card>
-            <v-card-title>
-              All meetings
-            </v-card-title>
-              <v-btn color="primary" to="/createMeetup">
-                Add meeting
-              </v-btn>
+  <v-container>
+      <v-layout justify-space-around>
+        <v-flex xs6>
+          <v-card class="elevation-12">
+            <h3>All meetings</h3>
+            <v-btn color="primary" to="/createMeetup">
+              Add meeting
+            </v-btn>
             <v-card-text>
-              <v-list two-line>
+              <v-list>
                 <v-list-tile avatar v-for="(event,index) in events" :key="index">
                   <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
                   <v-list-tile-avatar>
@@ -39,35 +36,38 @@
               </v-list>
             </v-card-text>
           </v-card>
+        </v-flex>
+        <v-spacer></v-spacer>
+        <v-flex xs6>
           <v-card>
+            <h3>All users</h3>
+            <v-card-text>
+            <v-data-table
+            :headers="headers"
+            :items="users"
+            hide-actions
+            class="elevation-12">
+            <template slot="items" slot-scope="props">
+              <td class="text-xs-left">{{ props.item.nume }}</td>
+              <td class="text-xs-left">{{ props.item.prenume }}</td>
+            </template>
+          </v-data-table>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+      <v-layout justify-space-between>
+        <v-flex xs12>
+          <v-card class="elevation-12">
             <div id="columnchart_values"></div>
           </v-card>
         </v-flex>
-        <v-card>
-          <v-card-title>
-          All users
-          </v-card-title>
-          <v-card-text>
-          <v-data-table
-          :headers="headers"
-          :items="users"
-          hide-actions
-          class="elevation-1">
-          <template slot="items" slot-scope="props">
-            <td class="text-xs-left">{{ props.item.nume }}</td>
-            <td class="text-xs-left">{{ props.item.prenume }}</td>
-          </template>
-        </v-data-table>
-          </v-card-text>
-        </v-card>
-
-
+        <v-spacer></v-spacer>
          <!-- RAPORT: Top meetings -->
         <v-flex xs4>
           <v-card>
             <v-card-title>
-              <v-icon color="primary"> meeting_room
-              </v-icon>
+              <v-icon color="primary"> meeting_room </v-icon>
               Top meetings
             </v-card-title>
             <v-card-text>
@@ -89,12 +89,13 @@
            </v-card>
         </v-flex>
       </v-layout>
-    </v-slide-y-transition>
   </v-container>
 </template>
 
 <style scoped>
-
+#columnchart_values {
+  display: block;
+}
 </style>
 
 <script>

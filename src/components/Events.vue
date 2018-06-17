@@ -18,12 +18,12 @@
         <v-card-title secondary-title>
           <p> {{ this.events[id].descriere }} </p>
         </v-card-title>
-        <v-btn color="primary" @click="participanti = true">Who's going</v-btn>
-        <v-flex xs12>
+        <v-flex xs4>
             <v-card>
               <div id="piechart_3d"></div>
             </v-card>
           </v-flex>
+          <v-btn color="primary" @click="participanti = true">Who's going</v-btn>
         <v-list-tile v-for="(comment,index) in comments" :key="index">
           <v-list-tile-title>
             {{comment}}
@@ -87,16 +87,16 @@ p {
         usersGoing: [],
         items: [
           {
-            src: 'http://www.catster.com/wp-content/uploads/2017/08/Pixiebob-cat.jpg'
+            src: 'https://www.ejobs.ro/img/userCoverPhoto/2/6/263a613dc976a2fbc7e38fa48417ec61.png'
           },
           {
-            src: 'http://www.petwebsite.co.uk/media/k2/items/cache/c1572c59821062c96d0fc33ad32a2983_L.jpg'
+            src: 'http://officefitout.ro/en/wp-content/uploads/sites/2/2015/02/ALX_0129.jpg'
           },
           {
-            src: 'https://imagesvc.timeincapp.com/v3/mm/image?url=https%3A%2F%2Fpeopledotcom.files.wordpress.com%2F2018%2F02%2Ftwo-tone-cat.jpg%3Fw%3D2000&w=700&q=85'
+            src: 'https://media.glassdoor.com/l/bd/a7/7d/40/two-day-hackaton-at-qualitance.jpg'
           },
           {
-            src: 'https://www.cats.org.uk/uploads/images/featurebox_sidebar_kids/Cat-Behaviour.jpg'
+            src: 'https://www.startus.cc/sites/default/files/styles/company_profile_gallery_image/public/company-profile-gallery/selection_009_0.png?itok=0EXA_ld5'
           }
         ]
       }

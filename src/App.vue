@@ -9,6 +9,7 @@
       enable-resize-watcher
       fixed
       app
+      temporary
     >
       <div id="text" v-if="admin === false">
         <h1>Welcome</h1>
