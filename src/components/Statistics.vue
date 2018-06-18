@@ -1,12 +1,42 @@
 <template>
   <v-container>
+    <v-layout justify-space-between>
+      <v-flex xs12>
+        <v-card class="elevation-12">
+          <div id="columnchart_values"></div>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout align-start>
+        <v-flex xs12>
+          <v-card class="elevation-12">
+            <v-card-title>
+              <v-icon color="primary"> meeting_room </v-icon>
+              Top meetings
+            </v-card-title>
+            <v-card-text>
+              <v-card>
+                <v-list>
+                  <v-list-tile v-for="(item, index) in topMeetings" :key="index">
+                    <v-list-tile-action>
+                      <v-icon v-if="index === 0" color="primary">star</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <router-link :to="{ name: 'Events', params: { id: ev.indexOf(topMeetings[index]) }}" tag="li" style="cursor:pointer">
+                        <v-list-tile-title v-text="item"></v-list-tile-title>
+                      </router-link>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-card>
+            </v-card-text>
+           </v-card>
+        </v-flex>
+      </v-layout>
       <v-layout justify-space-around>
         <v-flex xs6>
           <v-card class="elevation-12">
             <h3>All meetings</h3>
-            <v-btn color="primary" to="/createMeetup">
-              Add meeting
-            </v-btn>
             <v-card-text>
               <v-list>
                 <v-list-tile avatar v-for="(event,index) in events" :key="index">
@@ -54,39 +84,6 @@
           </v-data-table>
             </v-card-text>
           </v-card>
-        </v-flex>
-      </v-layout>
-      <v-layout justify-space-between>
-        <v-flex xs12>
-          <v-card class="elevation-12">
-            <div id="columnchart_values"></div>
-          </v-card>
-        </v-flex>
-        <v-spacer></v-spacer>
-         <!-- RAPORT: Top meetings -->
-        <v-flex xs4>
-          <v-card>
-            <v-card-title>
-              <v-icon color="primary"> meeting_room </v-icon>
-              Top meetings
-            </v-card-title>
-            <v-card-text>
-              <v-card>
-                <v-list>
-                  <v-list-tile v-for="(item, index) in topMeetings" :key="index">
-                    <v-list-tile-action>
-                      <v-icon v-if="index === 0" color="primary">star</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                      <router-link :to="{ name: 'Events', params: { id: ev.indexOf(topMeetings[index]) }}" tag="li" style="cursor:pointer">
-                        <v-list-tile-title v-text="item"></v-list-tile-title>
-                      </router-link>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                </v-list>
-              </v-card>
-            </v-card-text>
-           </v-card>
         </v-flex>
       </v-layout>
   </v-container>
