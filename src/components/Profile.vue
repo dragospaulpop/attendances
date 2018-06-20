@@ -70,7 +70,7 @@
                       id = "newpsw"
                     >
                   </v-text-field>
-                  <v-btn color="primary" @click="savenewdetails">Salveaza datele</v-btn>
+                  <v-btn color="primary" @click="savenewdetails">Save</v-btn>
                   <v-btn flat color="primary" router to = "/">Back</v-btn>
                 </v-card-text>
               </v-card>
