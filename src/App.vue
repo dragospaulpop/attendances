@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
-      v-show="userIsAuthenticated" 
+      v-show="userIsAuthenticated"
       persistent
       :mini-variant="miniVariant"
       :clipped="clipped"
@@ -9,6 +9,7 @@
       enable-resize-watcher
       fixed
       app
+      temporary
     >
       <div id="text" v-if="admin === false">
         <h1>Welcome</h1>
@@ -23,11 +24,11 @@
             {{ value }} %
           </v-progress-circular>
         </v-flex>
-        <v-flex xs12> 
+        <v-flex xs12>
           {{totalParticipari}} events out of {{totalEvents}}
         </v-flex>
       </div>
-      <v-flex xs12> 
+      <v-flex xs12>
       <v-list-tile router to = "/">
         <v-list-tile-action>
           <v-icon>home</v-icon>
@@ -35,7 +36,7 @@
         <v-list-tile-title>Home</v-list-tile-title>
       </v-list-tile>
       </v-flex>
-      <v-flex xs12> 
+      <v-flex xs12>
       <v-list-tile router to = "/profile">
         <v-list-tile-action>
           <v-icon>account_circle</v-icon>
@@ -43,18 +44,26 @@
         <v-list-tile-title>Account info</v-list-tile-title>
       </v-list-tile>
       </v-flex>
-      <v-flex>
+      <v-flex xs12>
+        <v-list-tile router to = "/createMeetup" v-if="admin === true">
+          <v-list-tile-action>
+            <v-icon>card_travel</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-title>Create meetup</v-list-tile-title>
+        </v-list-tile>
+      </v-flex>
+      <v-flex xs12>
       <v-list-tile router to = "/statistics" v-if="admin === true">
         <v-list-tile-action>
-          <v-icon>account_circle</v-icon>
+          <v-icon>settings</v-icon>
         </v-list-tile-action>
         <v-list-tile-title>Statistics</v-list-tile-title>
       </v-list-tile>
       </v-flex>
-      <v-flex xs12> 
+      <v-flex xs12>
       <v-list-tile  @click="onSignOut">
         <v-list-tile-action>
-          <v-icon>settings</v-icon>
+          <v-icon>clear</v-icon>
         </v-list-tile-action>
         <v-list-tile-title>Sign Out</v-list-tile-title>
       </v-list-tile>
@@ -89,14 +98,57 @@
     </v-content>
     <v-footer height="auto" class="primary">
     <v-layout row wrap justify-center>
-      <v-btn
-        color="white"
-        flat
-        v-for="link in links"
-        :key="link"
-      >
-        {{ link }}
-      </v-btn>
+      <v-btn flat class="white--text" @click="aboutUs = true"> About us </v-btn>
+      <v-dialog v-model="aboutUs" max-width="600">
+        <v-card>
+          <v-card-title>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel odio auctor, rutrum felis at, volutpat libero. Quisque sollicitudin pretium tortor, ut interdum nisi vestibulum et. Maecenas at diam id purus pharetra feugiat non at enim. Proin eleifend diam vitae arcu pellentesque ullamcorper ut quis lectus. Morbi rhoncus, nisl vel pellentesque commodo, nibh lorem pulvinar diam, vel auctor diam sapien vitae lectus. Integer ornare, enim auctor blandit sodales, diam eros congue leo, nec consequat dui orci sed mauris. Proin tincidunt sagittis libero, vitae sagittis felis blandit id. Donec dictum metus quis lectus tempus aliquam. In mattis mi ac leo ornare varius. Nulla tempor, mauris lobortis viverra gravida, ex diam rutrum enim, id mattis ligula elit sit amet turpis. Curabitur consequat dolor sit amet iaculis laoreet. Aliquam nec aliquam nulla. Vestibulum vehicula magna vel lectus molestie, ut auctor nisl cursus. Aenean ut hendrerit tellus.
+          </v-card-title>
+        </v-card>
+      </v-dialog>
+      <v-btn flat class="white--text" @click="terms = true" > Terms and conditions </v-btn>
+      <v-dialog v-model="terms" max-width="600">
+        <v-card>
+          <v-card-title>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel odio auctor, rutrum felis at, volutpat libero. Quisque sollicitudin pretium tortor, ut interdum nisi vestibulum et. Maecenas at diam id purus pharetra feugiat non at enim. Proin eleifend diam vitae arcu pellentesque ullamcorper ut quis lectus. Morbi rhoncus, nisl vel pellentesque commodo, nibh lorem pulvinar diam, vel auctor diam sapien vitae lectus. Integer ornare, enim auctor blandit sodales, diam eros congue leo, nec consequat dui orci sed mauris. Proin tincidunt sagittis libero, vitae sagittis felis blandit id. Donec dictum metus quis lectus tempus aliquam. In mattis mi ac leo ornare varius. Nulla tempor, mauris lobortis viverra gravida, ex diam rutrum enim, id mattis ligula elit sit amet turpis. Curabitur consequat dolor sit amet iaculis laoreet. Aliquam nec aliquam nulla. Vestibulum vehicula magna vel lectus molestie, ut auctor nisl cursus. Aenean ut hendrerit tellus.
+          </v-card-title>
+        </v-card>
+      </v-dialog>
+      <v-btn flat class="white--text" @click="contact = true"> Contact </v-btn>
+      <v-dialog v-model="contact" max-width="600">
+        <v-card>
+         <form>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-text-field
+                label="Enter your E-mail"
+                v-model="email"
+              >
+              </v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-text-field
+                name="description"
+                label="description"
+                id="description"
+                v-model="description"
+               ></v-text-field>
+            </v-flex>
+          </v-layout>
+           <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <v-btn
+                class="primary"
+                type="submit"
+                route to='/'>Send message</v-btn>
+              <v-btn flat color="primary" router to = "/" @click="contact = false">Back</v-btn>
+            </v-flex>
+          </v-layout>
+        </form>
+        </v-card>
+      </v-dialog>
     </v-layout>
   </v-footer>
   </v-app>
@@ -121,13 +173,16 @@ export default {
       clipped: true,
       drawer: false,
       fixed: false,
+      aboutUs: false,
+      contact: false,
+      terms: false,
+      email: '',
+      description: '',
       items: [{
         icon: 'bubble_chart',
         title: 'Inspire'
       }],
-      miniVariant: false,
-      title: 'v. Narcisa',
-      links: ['Home', 'About Us', 'Contact Us']
+      miniVariant: false
     }
   },
   name: 'App',

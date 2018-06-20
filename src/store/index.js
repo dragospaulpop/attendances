@@ -23,9 +23,13 @@ export default new Vuex.Store({
     eventsGoing: [],
     admin: null,
     image: null,
-    uploadPicture: []
+    uploadPicture: [],
+    error: null
   },
   mutations: {
+    setError (state, payload) {
+      state.error = payload
+    },
     setUser (state, payload) {
       state.user = payload
     },
@@ -159,6 +163,11 @@ export default new Vuex.Store({
               })
           }
         )
+        .catch(
+          error => {
+            commit('setError', error)
+          }
+        )
     },
     AuthChange ({commit}) {
       firebase.auth().onAuthStateChanged((user) => {
@@ -234,6 +243,7 @@ export default new Vuex.Store({
     keysEvents: state => state.keysEvents,
     eventsGoing: state => state.eventsGoing,
     admin: state => state.admin,
-    uploadPicture: state => state.uploadPicture
+    uploadPicture: state => state.uploadPicture,
+    error: state => state.error
   }
 })

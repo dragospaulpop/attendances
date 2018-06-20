@@ -1,76 +1,95 @@
  <template>
-   <v-container fluid grid-list-xl>
-     <v-layout wrap>
-       <v-flex xs6>
-        <v-btn color="primary" @click="addPicture" :value = "pictureSelect">Select profile pic</v-btn>
-        <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
-       </v-flex>
-       <v-flex xs6>
-        <img :src="getuserdetails.image" height="150">
-       </v-flex>
-       <v-flex xs6>
-        <v-text-field
-          name="nume"
-          label="Last name"
-          :value = getuserdetails.nume
-          id="nume"
-        ></v-text-field>
-        <v-spacer></v-spacer>
-      </v-flex>
-      <v-flex xs6>
-        <v-text-field
-          name="prenume"
-          label="First name"
-          :value = getuserdetails.prenume
-          id="prenume"
-        ></v-text-field>
-      </v-flex>
-       <v-flex xs6>
-        <v-text-field
-          name="parolaactuala"
-          label="Current password"
-          hint="Minim 8 caractere"
-          v-model="oldpass"
-          min="8"
-          :type="e1 ? 'password' : 'text'"
-          id = "oldpsw"
-          required
-        >
-        </v-text-field>
-       </v-flex>
-       <v-flex xs6>
-         <v-text-field
-             label="New password"
-             name="parolanoua"
-             hint="Minim 8 caractere"
-             v-model="password"
-             min="8"
-             :append-icon-cb="() => (e1 = !e1)"
-             :type="e1 ? 'password' : 'text'"
-             counter
-           >
-           </v-text-field>
-         </v-flex>
-         <v-flex xs6>
-           <v-text-field
-             name="parolanouaconfirm"
-             label="Confirm new password"
-             hint="Minim 8 caractere"
-             v-model="confirmPassword"
-             min="8"
-             :type="e1 ? 'password' : 'text'"
-             :rules="[comparePasswords]"
-             id = "newpsw"
-           >
-         </v-text-field>
-       </v-flex>
-       <v-flex xs12>
-        <v-btn @click="savenewdetails">Salveaza datele</v-btn>
-        <v-btn flat color="primary" router to = "/">Back</v-btn>
-       </v-flex>
-    </v-layout>
+   <v-container>
+      <v-layout justify-center>
+        <v-flex xs6>
+          <img :src="getuserdetails.image" height="200" v-if="getuserdetails.image !== ''">
+          <input type="file"  style="display:none" ref="pictureInput" accept="image/*" @change="pictureSelect">
+          <v-btn id="imagine"
+          :loading="loading3"
+          :disabled="loading3"
+          color="blue-grey"
+          class="white--text"
+          @click.native="loader = 'loading3'"
+          @click="addPicture"
+          :value = "pictureSelect"
+          >
+            Select profile pic
+            <v-icon right dark>cloud_upload</v-icon>
+          </v-btn>
+        </v-flex>
+      </v-layout>
+      <v-layout justify-center>
+          <v-flex xs6>
+          <v-layout>
+            <v-flex>
+              <v-card>
+                <v-card-text>
+                  <v-text-field
+                    name="nume"
+                    label="Last name"
+                    :value = getuserdetails.nume
+                    id="nume"
+                  ></v-text-field>
+                  <v-spacer></v-spacer>
+                  <v-text-field
+                    name="prenume"
+                    label="First name"
+                    :value = getuserdetails.prenume
+                    id="prenume"
+                  ></v-text-field>
+                  <v-text-field
+                    name="parolaactuala"
+                    label="Current password"
+                    hint="Minim 8 caractere"
+                    v-model="oldpass"
+                    min="8"
+                    :type="e1 ? 'password' : 'text'"
+                    id = "oldpsw"
+                    required
+                  >
+                  </v-text-field>
+                  <v-text-field
+                      label="New password"
+                      name="parolanoua"
+                      hint="Minim 8 caractere"
+                      v-model="password"
+                      min="8"
+                      :append-icon-cb="() => (e1 = !e1)"
+                      :type="e1 ? 'password' : 'text'"
+                      counter
+                    >
+                    </v-text-field>
+                    <v-text-field
+                      name="parolanouaconfirm"
+                      label="Confirm new password"
+                      hint="Minim 8 caractere"
+                      v-model="confirmPassword"
+                      min="8"
+                      :type="e1 ? 'password' : 'text'"
+                      :rules="[comparePasswords]"
+                      id = "newpsw"
+                    >
+                  </v-text-field>
+                  <v-btn color="primary" @click="savenewdetails">Save</v-btn>
+                  <v-btn flat color="primary" router to = "/">Back</v-btn>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
    </v-container>
  </template>
+
+<style>
+img {
+  margin: 0;
+  padding: 0;
+}
+#imagine {
+  display: block;
+}
+</style>
 
 <script>
 import firebase from '@/firebase'
@@ -88,6 +107,7 @@ export default {
       image: null,
       selectedFile: null,
       downloadURL: null,
+      loading3: false,
       rules: {
         email: (value) => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -95,9 +115,6 @@ export default {
         }
       }
     }
-  },
-  created () {
-    return this.$store.getters.userdetails
   },
   computed: {
     user () {
@@ -120,6 +137,9 @@ export default {
       const userdet = this.userdetails[x]
       return userdet
     }
+  },
+  created () {
+    return this.$store.getters.userdetails
   },
   methods: {
     savenewdetails () {
@@ -152,6 +172,7 @@ export default {
       fileReader.readAsDataURL(selectedFile)
       this.imageUrl = selectedFile
       const storageRef = firebase.storage().ref('/users/' + filesName)
+      console.log(storageRef)
       const uploadTask = storageRef.put(selectedFile)
       uploadTask.on('state_changed', snapshot => {
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100

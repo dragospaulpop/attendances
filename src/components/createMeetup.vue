@@ -22,7 +22,7 @@
             <v-flex xs12 sm6 offset-sm3>
               <v-text-field
                 name="descriere"
-                label="Descriere"
+                label="Description"
                 id="descriere"
                 v-model="descriere"
                 required></v-text-field>
@@ -59,8 +59,9 @@
             <v-flex xs12 sm6 offset-sm3>
               <v-btn
                 class="primary"
-                type="submit" 
+                type="submit"
                 @click="createMeetup" route to='/'>Create Meetup</v-btn>
+              <v-btn flat color="primary" router to = "/">Back</v-btn>
             </v-flex>
           </v-layout>
         </form>
@@ -89,8 +90,8 @@
             descriere: this.descriere,
             data: this.dateevent,
             prezenta: false,
-            comments: '',
-            prezenti: 0
+            prezenti: 0,
+            comments: ''
           })
       }
     }

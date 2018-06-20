@@ -1,73 +1,17 @@
 <template>
-  <v-container fluid>
-    <v-slide-y-transition mode="out-in">
-      <v-layout column align-left>
+  <v-container>
+    <v-layout justify-space-between>
+      <v-flex xs12>
+        <v-card class="elevation-12">
+          <div id="columnchart_values"></div>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout align-start>
         <v-flex xs12>
-          <v-card>
-            <div id="columnchart_values"></div>
-          </v-card>
-        </v-flex>
-        <v-card>
-          <v-card-title>
-          All users
-          </v-card-title>
-          <v-card-text>
-          <v-data-table
-          :headers="headers"
-          :items="users"
-          hide-actions
-          class="elevation-1">
-          <template slot="items" slot-scope="props">
-            <td class="text-xs-left">{{ props.item.nume }}</td>
-            <td class="text-xs-left">{{ props.item.prenume }}</td>
-          </template>
-        </v-data-table>
-          </v-card-text>
-        </v-card>
-
-        <v-card>
-          <v-card-title>
-            <v-btn color="primary" to="/createMeetup">
-              Add meeting
-            </v-btn>
-            All meetings
-          </v-card-title>
-          <v-card-text>
-            <v-list two-line>
-              <v-list-tile avatar v-for="(event,index) in events" :key="index">
-                <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-                <v-list-tile-avatar>
-                  <img :src="event.avatar">
-                </v-list-tile-avatar>
-                </router-link>
-                <v-list-tile-content>
-                  <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
-                  <v-list-tile-title>
-                    {{event.titlu}}
-                  </v-list-tile-title>
-                  <v-list-tile-sub-title v-html="event.descriere">
-                  </v-list-tile-sub-title>
-                  </router-link>
-                </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-list-tile-action-text>
-                    {{event.data | filtru}}
-                  </v-list-tile-action-text>
-                <v-icon @click="deleteEvent(index)" style="cursor:pointer">
-                  delete
-                </v-icon>
-                </v-list-tile-action>
-              </v-list-tile>
-            </v-list>
-          </v-card-text>
-        </v-card>
-
-        <!-- RAPORT: Top meetings -->
-        <v-flex xs4>
-          <v-card>
+          <v-card class="elevation-12">
             <v-card-title>
-              <v-icon color="primary"> meeting_room
-              </v-icon>
+              <v-icon color="primary"> meeting_room </v-icon>
               Top meetings
             </v-card-title>
             <v-card-text>
@@ -88,14 +32,67 @@
             </v-card-text>
            </v-card>
         </v-flex>
-
       </v-layout>
-    </v-slide-y-transition>
+      <v-layout justify-space-around>
+        <v-flex xs6>
+          <v-card class="elevation-12">
+            <h3>All meetings</h3>
+            <v-card-text>
+              <v-list>
+                <v-list-tile avatar v-for="(event,index) in events" :key="index">
+                  <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                  <v-list-tile-avatar>
+                    <img :src="event.avatar">
+                  </v-list-tile-avatar>
+                  </router-link>
+                  <v-list-tile-content>
+                    <router-link :to="{ name: 'Events', params: { id: index }}" tag="li" style="cursor:pointer">
+                    <v-list-tile-title>
+                      {{event.titlu}}
+                    </v-list-tile-title>
+                    <v-list-tile-sub-title v-html="event.descriere">
+                    </v-list-tile-sub-title>
+                    </router-link>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-list-tile-action-text>
+                      {{event.data | filtru}}
+                    </v-list-tile-action-text>
+                  <v-icon @click="deleteEvent(index)" style="cursor:pointer">
+                    delete
+                  </v-icon>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+        <v-spacer></v-spacer>
+        <v-flex xs6>
+          <v-card>
+            <h3>All users</h3>
+            <v-card-text>
+            <v-data-table
+            :headers="headers"
+            :items="users"
+            hide-actions
+            class="elevation-12">
+            <template slot="items" slot-scope="props">
+              <td class="text-xs-left">{{ props.item.nume }}</td>
+              <td class="text-xs-left">{{ props.item.prenume }}</td>
+            </template>
+          </v-data-table>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
   </v-container>
 </template>
 
 <style scoped>
-
+#columnchart_values {
+  display: block;
+}
 </style>
 
 <script>
@@ -105,10 +102,6 @@
   export default {
     data () {
       return {
-        filter: {
-          an: null,
-          luna: null
-        },
         eventsAll: [],
         headers: [
           {
@@ -122,7 +115,11 @@
         ],
         users: [],
         topMeetings: [],
-        ev: []
+        ev: [],
+        filter: {
+          an: null,
+          luna: null
+        }
       }
     },
     computed: {
@@ -183,6 +180,7 @@
               var eventdetails = {}
               eventdetails.avatar = myObj[key].avatar
               eventdetails.descriere = myObj[key].descriere
+              eventdetails.id = myObj[key].id
               eventdetails.prezenta = myObj[key].prezenta
               eventdetails.titlu = myObj[key].titlu
               eventdetails.data = new Date(myObj[key].data)
@@ -199,6 +197,7 @@
         for (var i = 0; i < this.events.length; i++) {
           x.push([this.events[i].titlu, this.events[i].prezenti, 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')'])
         }
+        console.log(x)
         window.google.charts.load('current', {packages: ['corechart']})
         window.google.charts.setOnLoadCallback(() => {
           var view = new window.google.visualization.DataView(
